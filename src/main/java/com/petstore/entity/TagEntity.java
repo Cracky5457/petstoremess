@@ -19,7 +19,7 @@ public class TagEntity extends AbstractEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id; 
 	
-	@Column(name = "NAME")
+	@Column(name = "NAME") 
 	private String name;
 	
 	@OneToMany(mappedBy = "pet")

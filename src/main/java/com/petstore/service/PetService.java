@@ -9,5 +9,5 @@ public interface PetService {
 
 	public List<PetDTO> findAllPets();
 	public PetDTO findPetById(Long id);
-	public PetEntity saveOrUpdatePet(PetEntity pet);
+	public PetDTO saveOrUpdatePet(PetDTO pet);
 }
