@@ -1,0 +1,31 @@
+<div ng-init="pet.init()" class="control">
+  <div class="modal-header">
+    <span class="modal-title">{{pet.title}} Pet</span>
+    <i class="clickable fa fa-times fa-2x pull-right color-primary" aria-hidden="true" ng-click="pet.cancel()"></i>
+  </div>
+  <div class="modal-body">
+      <form>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" placeholder="Name" ng-model="pet.petModel.name">
+      </div>
+      <div class="form-group">
+        <label for="status">Status</label>
+        <select class="form-control" ng-options="status for status in pet.status" ng-model="pet.petModel.status"></select>
+      </div>
+      <div class="form-group">
+        <label for="tags">Tags</label>
+        <tags-input ng-model="pet.petModel.tags" display-property="name"></tags-input>
+      </div>
+      <div class="form-group">
+        <label for="exampleInputFile">Image</label>
+        <input type="file" id="exampleInputFile">
+        <p class="help-block">Upload an image.</p>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="pet.ok()">Sauvegarder</button>
+    <button class="btn btn-primary" type="button" ng-click="pet.cancel()">Annuler</button>
+  </div>
+</div>

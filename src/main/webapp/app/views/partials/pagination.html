@@ -1,0 +1,24 @@
+<div class="pagination" ng-if="pages.length >= 2">
+  <ul class="pagination">
+
+    <li>
+      <a class="clickable" ng-click="selectPage(1)" aria-label="First">
+        <span aria-hidden="true">Début</span>
+      </a>
+    </li>
+    <li>
+      <a><i class="clickable fa fa-arrow-left" ng-click="selectPage(currentPage-1)" aria-hidden="true"></i></a>
+    </li>
+
+    <li ng-repeat="page in pages" ng-class="{active: page==currentPage}"><a class="clickable" ng-click="selectPage(page)">{{page}}</a></li>
+
+    <li>
+      <a><i class="clickable fa fa-arrow-right" ng-click="selectPage(currentPage+1)" aria-hidden="true"></i></a>
+    </li>
+    <li>
+      <a class="clickable" href="" ng-click="selectPage(numPages)" aria-label="Last">
+        <span aria-hidden="true">{{numPages}}</span>
+      </a>
+    </li>
+  </ul>
+</div>
