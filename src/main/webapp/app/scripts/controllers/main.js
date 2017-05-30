@@ -36,7 +36,6 @@ angular.module('petstoreFrontApp')
 
      this.displayTags = function(tags) {
 
-       console.log(tags);
        var stags = "";
 
        var i = 0;
@@ -108,6 +107,28 @@ angular.module('petstoreFrontApp')
               },function(error) {
 
               });
+          });
+    }
+
+    this.addImage = function(petSelected) {
+
+       var modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'views/modals/imagepet.html',
+            controller: 'ModalImagePetCtrl',
+            controllerAs: 'imagepet',
+            size: 'lg',
+            resolve: {
+                items: function () {
+                  return {
+                    pet: petSelected
+                  };
+                }
+              }
+          });
+
+          modalInstance.result.then(function (image) {
+            console.log(image);
           });
     }
 

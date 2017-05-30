@@ -40,7 +40,8 @@ public class PetEntity extends AbstractEntity {
     @Column(name = "STATUS")
 	private String status;
 	
-	@ManyToOne(fetch = FetchType.LAZY,cascade = {javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.REFRESH, javax.persistence.CascadeType.MERGE})
+    @Cascade(CascadeType.SAVE_UPDATE)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CATEGORY_PET", referencedColumnName = "IDT_CATEGORY")
 	private CategoryEntity category;
 	
@@ -48,6 +49,10 @@ public class PetEntity extends AbstractEntity {
     @Cascade(CascadeType.ALL)
 	@OneToMany(mappedBy = "pet", fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<PetTagEntity> listTags = new ArrayList<PetTagEntity>();
+    
+    @Cascade(CascadeType.ALL)
+	@OneToMany(mappedBy = "pet", fetch = FetchType.LAZY, orphanRemoval = true)
+	private List<PetImageEntity> listImages = new ArrayList<PetImageEntity>();
 	
 	public Long getId() {
 		return id;
@@ -89,6 +94,17 @@ public class PetEntity extends AbstractEntity {
 		this.listTags.clear();
 		this.listTags.addAll(tags);
 	}
+
+	public List<PetImageEntity> getListImages() {
+		return listImages;
+	}
+
+	public void setListImages(List<PetImageEntity> listImages) {
+		this.listImages.clear();
+		this.listImages.addAll(listImages);
+	}
+	
+	
 	
 	
 	

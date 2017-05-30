@@ -1,0 +1,19 @@
+<div ng-init="imagepet.init()" class="control">
+  <div class="modal-header">
+    <span class="modal-title">Upload image</span>
+    <i class="clickable fa fa-times fa-2x pull-right color-primary" aria-hidden="true" ng-click="imagepet.cancel()"></i>
+  </div>
+  <div class="modal-body">
+      <form>
+      <div class="form-group">
+        <label for="image">Upload Image</label>
+        <input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)"/>
+        <p class="help-block">Upload an image.</p>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="imagepet.ok()">Sauvegarder</button>
+    <button class="btn btn-primary" type="button" ng-click="imagepet.cancel()">Annuler</button>
+  </div>
+</div>
