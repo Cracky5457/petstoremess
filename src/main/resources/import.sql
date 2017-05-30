@@ -1,0 +1,1 @@
+INSERT INTO T_PET(idt_pet,name,status) VALUES(1,'Nala','Sold')

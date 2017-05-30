@@ -25,6 +25,17 @@ angular.module('petstoreFrontApp')
               return response;
             });
       },
+      delete: function (petId) {
+        return $http.delete(CONSTANTS.USERS_DOMAIN + "/pet/" + petId + CONSTANTS.SUFFIXE_DOMAIN)
+          .then(
+            function (response) {
+              return response.data;
+            },
+            function (response) {
+              console.log(response);
+              return response;
+            });
+      },
       list: function () {
         return $http.get(CONSTANTS.USERS_DOMAIN + "/pet/list" + CONSTANTS.SUFFIXE_DOMAIN)
           .then(

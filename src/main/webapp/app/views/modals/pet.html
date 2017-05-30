@@ -14,6 +14,10 @@
         <select class="form-control" ng-options="status for status in pet.status" ng-model="pet.petModel.status"></select>
       </div>
       <div class="form-group">
+        <label for="category">Category</label>
+        <input type="text" class="form-control" id="category" placeholder="category" ng-model="pet.petModel.category.name">
+      </div>
+      <div class="form-group">
         <label for="tags">Tags</label>
         <tags-input ng-model="pet.petModel.tags" display-property="name"></tags-input>
       </div>

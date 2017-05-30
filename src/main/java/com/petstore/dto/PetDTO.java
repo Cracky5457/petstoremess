@@ -1,15 +1,11 @@
 package com.petstore.dto;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.petstore.dto.base.RESTResponse;
 import com.petstore.entity.PetEntity;
+import com.petstore.entity.PetTagEntity;
 
 public class PetDTO extends RESTResponse{
 
@@ -31,6 +27,29 @@ public class PetDTO extends RESTResponse{
 		this.id = entity.getId();
 		this.name = entity.getName();
 		this.status = entity.getStatus();
+		
+		if(entity.getCategory() != null) {
+			this.category = new CategoryDTO();
+			this.category.setId(entity.getCategory().getId());
+			this.category.setName(entity.getCategory().getName());
+		}
+		
+		if(entity.getListTags() != null && entity.getListTags().size() > 0) {
+
+			this.tags = new ArrayList<TagDTO>();
+			
+			for(PetTagEntity ptEntity : entity.getListTags()) {
+				TagDTO tagDTO = new TagDTO();
+				
+				tagDTO.setId(ptEntity.getTag().getId());
+				tagDTO.setName(ptEntity.getTag().getName());
+				
+				this.tags.add(tagDTO);
+			}
+		}
+
+		
+		
 	}
 
 	public Long getId() {

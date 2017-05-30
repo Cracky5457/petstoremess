@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.http.HttpStatus;
 
 import com.petstore.dto.PetDTO;
+import com.petstore.exception.PetStoreRulesException;
 import com.petstore.service.PetService;
 
 @Controller  // we could use @RestController and remove @ResponseBody
@@ -33,6 +36,13 @@ public class PetController {
 	public PetDTO updatePet(@RequestBody PetDTO dto) {
 		return petService.saveOrUpdatePet(dto);
 	}
+	
+	@RequestMapping(value = "/{petId}", method = RequestMethod.DELETE)
+	@ResponseBody
+	public void deletePetById(@PathVariable Long petId) throws PetStoreRulesException {
+		petService.deleteById(petId);
+	}
+	
 	
 	@RequestMapping(value = "/{petId}", method = RequestMethod.GET)
 	@ResponseBody

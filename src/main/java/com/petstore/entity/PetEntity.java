@@ -1,11 +1,10 @@
 package com.petstore.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +16,10 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.validator.constraints.NotEmpty;
+
 @Entity
 @Table(name = "T_PET")
 public class PetEntity extends AbstractEntity {
@@ -27,20 +30,24 @@ public class PetEntity extends AbstractEntity {
 	private Long id; 
 	
     @NotNull
+    @NotEmpty
     @Size(max = 10)
 	@Column(name = "NAME",length = 50, nullable = false)
 	private String name;
 	
+    @NotNull
+    @NotEmpty
     @Column(name = "STATUS")
 	private String status;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY,cascade = {javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.REFRESH, javax.persistence.CascadeType.MERGE})
 	@JoinColumn(name = "CATEGORY_PET", referencedColumnName = "IDT_CATEGORY")
 	private CategoryEntity category;
 	
 	/* We could have use @ManyToMany but I prefer create an intermediate entity manually with a total control on it*/
-	@OneToMany(mappedBy = "tag")
-	private List<PetTagEntity> listTags;
+    @Cascade(CascadeType.ALL)
+	@OneToMany(mappedBy = "pet", fetch = FetchType.LAZY, orphanRemoval = true)
+	private List<PetTagEntity> listTags = new ArrayList<PetTagEntity>();
 	
 	public Long getId() {
 		return id;
@@ -65,6 +72,25 @@ public class PetEntity extends AbstractEntity {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
+	public CategoryEntity getCategory() {
+		return category;
+	}
+
+	public void setCategory(CategoryEntity category) {
+		this.category = category;
+	}
+
+	public List<PetTagEntity> getListTags() {
+		return listTags;
+	}
+
+	public void setListTags(List<PetTagEntity> tags) {
+		this.listTags.clear();
+		this.listTags.addAll(tags);
+	}
+	
+	
 	
 	
 }

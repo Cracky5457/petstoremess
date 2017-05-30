@@ -1,0 +1,13 @@
+<div>
+  <div class="modal-header">
+    <span class="widget-header__title">{{modalconfirm.title}}</span>
+    <i class="clickable fa fa-times fa-2x pull-right color-primary" aria-hidden="true" ng-click="retardlivraison.ok()"></i>
+  </div>
+  <div class="modal-body">
+    {{modalconfirm.message}}
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="modalconfirm.ok()">Yes</button>
+    <button class="btn btn-primary" type="button" ng-click="modalconfirm.cancel()">Cancel</button>
+  </div>
+</div>

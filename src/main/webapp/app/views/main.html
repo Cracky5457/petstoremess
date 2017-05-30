@@ -2,7 +2,7 @@
 
   <div class="row action-bar">
     <div class="col-xs-12">
-        <button class="btn btn-primary" type="button" ng-click="main.openModalPet()"><span><i class="fa fa-plus" aria-hidden="true"></i> Add Pet</span></button>
+        <button class="btn btn-primary" type="button" ng-click="main.addPet()"><span><i class="fa fa-plus" aria-hidden="true"></i> Add Pet</span></button>
     </div>
   </div>
 
@@ -16,6 +16,7 @@
             <th class="sortable" st-sort="status">Status</th>
             <th class="sortable" st-sort="category">Category</th>
             <th class="sortable" st-sort="tags">Tags</th>
+            <th></th>
           </tr>
           <tr>
             <th>
@@ -25,27 +26,32 @@
               <input st-search="status" placeholder="status" class="input-sm form-control" type="search" />
             </th>
             <th>
-              <input st-search="category" placeholder="category" class="input-sm form-control" type="search" />
+              <input st-search="category.name" placeholder="category" class="input-sm form-control" type="search" />
             </th>
-            <th>
+            <th >
               <input st-search="tags" placeholder="tags" class="input-sm form-control" type="search" />
             </th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           <tr ng-show="main.displayListPets == null || main.displayListPets.length == 0">
-            <td colspan="4"> Pas de données </td>
+            <td colspan="5"> Pas de données </td>
           </tr>
           <tr ng-repeat="pet in main.displayListPets">
             <td>{{pet.name}}</td>
             <td>{{pet.status}}</td>
-            <td>{{pet.category}}</td>
-            <td>{{pet.tags}}</td>
+            <td>{{pet.category.name}}</td>
+            <td>{{main.displayTags(pet.tags)}}</td>
+            <td>
+              <i class="fa fa-trash clickable" ng-click="main.removePet(pet.id)" aria-hidden="true"></i>
+              <i class="fa fa-pencil-square-o clickable" ng-click="main.editPet(pet)" aria-hidden="true"></i>
+            </td>
           </tr>
         </tbody>
         <tfoot>
           <tr>
-            <td colspan="4" class="text-center">
+            <td colspan="5" class="text-center">
               <div st-pagination="" st-items-by-page="main.lineByPage" st-template="views/partials/pagination.html"></div>
             </td>
           </tr>

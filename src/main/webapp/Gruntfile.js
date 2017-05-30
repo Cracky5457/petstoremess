@@ -48,6 +48,10 @@ module.exports = function (grunt) {
           livereload: '<%= connect.options.livereload %>'
         }
       },
+      styles: {
+        files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
+        tasks: ['newer:copy:styles', 'postcss']
+      },
       gruntfile: {
         files: ['Gruntfile.js']
       },
@@ -204,9 +208,7 @@ module.exports = function (grunt) {
     postcss: {
       options: {
         processors: [
-          require('autoprefixer')({
-            browsers: ['last 1 version']
-          })
+          require('autoprefixer-core')({browsers: ['last 1 version']})
         ]
       },
       server: {
@@ -253,6 +255,7 @@ module.exports = function (grunt) {
         }
       }
     },
+    
     // Renames files for browser caching purposes
     filerev: {
       dist: {
@@ -428,13 +431,15 @@ module.exports = function (grunt) {
     // Run some tasks in parallel to speed up the build process
     concurrent: {
       server: [
+        'copy:styles'
       ],
       test: [
+        'copy:styles'
       ],
       dist: [
+        'copy:styles',
         'imagemin',
         'svgmin'
-
       ]
     },
 
