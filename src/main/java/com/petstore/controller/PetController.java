@@ -40,13 +40,7 @@ public class PetController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	public PetDTO savePet(@Valid @RequestBody PetDTO dto) {
-		return petService.saveOrUpdatePet(dto);
-	}
-	
-	@RequestMapping(method = RequestMethod.PUT)
-	@ResponseBody
-	public PetDTO updatePet(@RequestBody PetDTO dto) {
-		return petService.saveOrUpdatePet(dto);
+		return petService.savePet(dto);
 	}
 	
 	@RequestMapping(value = "/{petId}", method = RequestMethod.DELETE)

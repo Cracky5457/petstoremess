@@ -12,6 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +31,7 @@ import com.petstore.entity.PetTagEntity;
 import com.petstore.entity.TagEntity;
 import com.petstore.exception.PetStoreRulesException;
 import com.petstore.service.PetService;
+import com.petstore.utils.Constants;
 
 @Service("petService")
 public class PetServiceImpl implements PetService {
@@ -66,6 +69,7 @@ public class PetServiceImpl implements PetService {
 	
 	@Override
 	@Transactional
+	@Secured("ROLE_LIST_PET")
 	public List<PetDTO> findAllPets() {
 		List<PetEntity> listPetEntity = petDao.findAll();
 		
@@ -82,15 +86,26 @@ public class PetServiceImpl implements PetService {
 	
 	@Override
 	@Transactional
+	@Secured("ROLE_LIST_PET")
 	public PetDTO findPetById(Long id) {
 		PetEntity entity =  petDao.findById(id);
 		
 		return new PetDTO(entity);
 	}
 	
+	/**
+	 * We isolate the save function just for define the secured save in case of we don't wan't allow edit to someone who can create
+	 * @param dto
+	 * @return
+	 */
 	@Override
+	@Secured("ROLE_ADD_PET")
+	public PetDTO savePet(PetDTO dto) {
+		return saveOrUpdatePet(dto);
+	}
+	
 	@Transactional(rollbackOn = Exception.class)
-	public PetDTO saveOrUpdatePet(PetDTO dto) {
+	private PetDTO saveOrUpdatePet(PetDTO dto) {
 		
 		PetEntity petEntity = new PetEntity();
 		
@@ -114,10 +129,6 @@ public class PetServiceImpl implements PetService {
 					
 					tagEntity.setName(tag.getName());
 				}
-				
-				// I don't understand why there is an error without that
-				// when I save ptEntity, @Cascade is define to SAVE_UPDATE, so I shouldn't have to persist it manually
-				tagDao.saveOrUpdate(tagEntity);
 				
 				PetTagEntity ptEntity = new PetTagEntity();
 				
@@ -152,6 +163,7 @@ public class PetServiceImpl implements PetService {
 
 	@Override
 	@Transactional
+	@Secured("ROLE_DELETE_PET")
 	public void deleteById(Long petId) throws PetStoreRulesException {
 		
 		RESTResponse response = new RESTResponse();
@@ -175,6 +187,7 @@ public class PetServiceImpl implements PetService {
 
 	@Override
 	@Transactional(rollbackOn = Exception.class)
+	@Secured("ROLE_EDIT_PET")
 	public RESTResponse addImageToPet(Long petId, MultipartFile file) throws PetStoreRulesException, IOException {
 		RESTResponse response = new RESTResponse();
 		

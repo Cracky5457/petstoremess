@@ -14,7 +14,7 @@ public interface PetService {
 
 	public List<PetDTO> findAllPets();
 	public PetDTO findPetById(Long id);
-	public PetDTO saveOrUpdatePet(PetDTO pet);
+	public PetDTO savePet(PetDTO pet);
 	public RESTResponse addImageToPet(Long petId, MultipartFile file) throws PetStoreRulesException, IOException;
 	public void deleteById(Long petId) throws PetStoreRulesException;
 	public ResponseEntity<byte[]> getImageById(Long imageId);

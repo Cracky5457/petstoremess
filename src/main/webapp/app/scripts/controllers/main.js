@@ -127,7 +127,7 @@ angular.module('petstoreFrontApp')
                 }).progress(function (evt) {
 
                 }).success(function (data, status, headers, config) {
-
+                  me.loadPets();
                 });
           });
     }

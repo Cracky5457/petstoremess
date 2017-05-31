@@ -10,9 +10,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.petstore.dto.base.RESTResponse;
 
@@ -22,10 +24,21 @@ public class GlobalControllerExceptionHandler  {
 
 	private static Log logger = LogFactory.getLog(GlobalControllerExceptionHandler.class);
 	
+	/**
+	 * 
+	 * @param e
+	 * @param response
+	 * @throws IOException
+	 */
 	@ExceptionHandler(AccessDeniedException.class)
-	@ResponseStatus(HttpStatus.FORBIDDEN)
-	public void acessDenied(Exception e) {
-		logger.error("------------------- ACESS DENIED ----------------");
+	public ResponseEntity<String> accessDenied(Exception e, HttpServletResponse response) throws IOException {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+		if (auth == null || auth instanceof AnonymousAuthenticationToken) {
+			return new ResponseEntity<String>("User not logged",HttpStatus.UNAUTHORIZED);
+		} else {
+			return new ResponseEntity<String>("User not authorized",HttpStatus.FORBIDDEN);
+		}
 	}
 
 	@ExceptionHandler(Exception.class)
