@@ -25,7 +25,7 @@ public class PetImageEntity extends AbstractEntity {
     @Column(name = "IMAGE_NAME")
     private String fileName;
     
-    @Column(columnDefinition = "LONGBLOB",name = "DATA")
+    @Column(columnDefinition = "varbinary(max)",name = "DATA")
     private byte[] data;
  
     public long getId() {

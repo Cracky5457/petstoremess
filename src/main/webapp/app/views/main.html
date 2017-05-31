@@ -16,7 +16,7 @@
             <th class="sortable" st-sort="status">Status</th>
             <th class="sortable" st-sort="category">Category</th>
             <th class="sortable" st-sort="tags">Tags</th>
-            <th></th>
+            <th>Actions</th>
           </tr>
           <tr>
             <th>
@@ -39,7 +39,12 @@
             <td colspan="5"> Pas de données </td>
           </tr>
           <tr ng-repeat="pet in main.displayListPets">
-            <td>{{pet.name}}</td>
+            <td>
+              <span ng-if="pet.photoUrls != null && pet.photoUrls.length > 0">
+                <img style="width:30px;" ng-src="{{pet.photoUrls[0]}}">
+              </span>
+              {{pet.name}}
+            </td>
             <td>{{pet.status}}</td>
             <td>{{pet.category.name}}</td>
             <td>{{main.displayTags(pet.tags)}}</td>

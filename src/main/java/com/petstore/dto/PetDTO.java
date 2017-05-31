@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.petstore.dto.base.RESTResponse;
 import com.petstore.entity.PetEntity;
+import com.petstore.entity.PetImageEntity;
 import com.petstore.entity.PetTagEntity;
 
 public class PetDTO extends RESTResponse{
@@ -18,6 +19,8 @@ public class PetDTO extends RESTResponse{
 	private List<TagDTO> tags;
 	
 	private CategoryDTO category;
+	
+	private List<String> photoUrls;
 
 	public PetDTO() {
 		super();
@@ -34,7 +37,7 @@ public class PetDTO extends RESTResponse{
 			this.category.setName(entity.getCategory().getName());
 		}
 		
-		if(entity.getListTags() != null && entity.getListTags().size() > 0) {
+		if(entity.getListTags() != null && !entity.getListTags().isEmpty()) {
 
 			this.tags = new ArrayList<TagDTO>();
 			
@@ -48,7 +51,12 @@ public class PetDTO extends RESTResponse{
 			}
 		}
 
-		
+		this.photoUrls= new ArrayList<String>();
+		if(entity.getListImages() != null && !entity.getListImages().isEmpty()) {
+			for(PetImageEntity petImage : entity.getListImages()) {
+				this.photoUrls.add("/pet/image/"+petImage.getId());
+			}
+		}
 		
 	}
 
@@ -91,7 +99,13 @@ public class PetDTO extends RESTResponse{
 	public void setCategory(CategoryDTO category) {
 		this.category = category;
 	}
-	
-	
-	
+
+	public List<String> getPhotoUrls() {
+		return photoUrls;
+	}
+
+	public void setPhotoUrls(List<String> photoUrls) {
+		this.photoUrls = photoUrls;
+	}
+
 }

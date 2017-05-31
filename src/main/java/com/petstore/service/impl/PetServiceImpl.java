@@ -1,22 +1,30 @@
 package com.petstore.service.impl;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.petstore.dao.CategoryDAO;
 import com.petstore.dao.PetDAO;
+import com.petstore.dao.PetImageDAO;
 import com.petstore.dao.TagDAO;
 import com.petstore.dto.PetDTO;
 import com.petstore.dto.TagDTO;
 import com.petstore.dto.base.RESTResponse;
 import com.petstore.entity.CategoryEntity;
 import com.petstore.entity.PetEntity;
+import com.petstore.entity.PetImageEntity;
 import com.petstore.entity.PetTagEntity;
 import com.petstore.entity.TagEntity;
 import com.petstore.exception.PetStoreRulesException;
@@ -33,6 +41,9 @@ public class PetServiceImpl implements PetService {
 	
 	@Autowired
 	private CategoryDAO categoryDao;
+	
+	@Autowired
+	private PetImageDAO petImageDao;
 	
 	private PetDTO checkPet(PetDTO dto) throws PetStoreRulesException {
 		
@@ -161,6 +172,73 @@ public class PetServiceImpl implements PetService {
 		
 		petDao.delete(pet);
 	}
+
+	@Override
+	@Transactional(rollbackOn = Exception.class)
+	public RESTResponse addImageToPet(Long petId, MultipartFile file) throws PetStoreRulesException, IOException {
+		RESTResponse response = new RESTResponse();
+		
+		PetEntity petEntity = petDao.findById(petId);
+		
+		if(petEntity == null) {
+			response.addErrorMessage("Pet not found");
+		}
+		
+        if (file.isEmpty()) {
+        	response.addErrorMessage("Empty file");
+        }
+        
+		response.validate();
+        
+		PetImageEntity petImage = new PetImageEntity();
+		
+		petImage.setPet(petEntity);
+		petImage.setFileName(file.getOriginalFilename());
+		
+		System.out.println("fileName : " + file.getOriginalFilename());
+		System.out.println("image size : " + file.getSize());
+		
+		byte[] bytes = file.getBytes();
+		
+		petImage.setData(bytes);
+		
+		petEntity.addImage(petImage);
+		
+		petDao.saveOrUpdate(petEntity);
+		
+		return response;
+	}
+
+	@Override
+	@Transactional(rollbackOn=Exception.class)
+	public ResponseEntity<byte[]> getImageById(Long imageId) {
+	    final HttpHeaders headers = new HttpHeaders();
+	    headers.setContentType(MediaType.IMAGE_JPEG);
+
+	    PetImageEntity image = petImageDao.findById(imageId);
+	    
+	    if(image == null) {
+	    	return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+	    
+	    byte[] data = image.getData();
+
+	    headers.set("content-length",Integer.toString(data.length));
+
+	    try {
+		    FileOutputStream out = new FileOutputStream("/test.jpg");
+			out.write(data);
+		    out.close();
+		    
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	    return new ResponseEntity<byte[]>(data, headers, HttpStatus.CREATED);
+	}
+	
+	
 
 
 }

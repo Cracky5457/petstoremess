@@ -1,0 +1,29 @@
+<div ng-init="uploadfile.init()" class="control">
+  <div class="modal-header">
+    <span class="modal-title">Upload file</span>
+    <i class="clickable fa fa-times fa-2x pull-right color-primary" aria-hidden="true" ng-click="uploadfile.cancel()"></i>
+  </div>
+  <div class="modal-body">
+      <form>
+      <div class="form-group">
+        <label for="image">Image</label>
+        <br>
+        <div class="btn btn-primary" ngf-select ng-model="uploadfile.file" name="file" ngf-pattern="'image/*'"
+          ngf-accept="'image/*'" ngf-max-size="20MB" 
+          ngf-resize="{width: 200}">Select</div>       
+        
+          <div>
+            <img
+              ngf-src="uploadfile.file"
+              ngf-resize="{width: 200, quality: 0.9}" 
+              ngf-no-object-url="true or false"
+            >
+          </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="uploadfile.ok()">Sauvegarder</button>
+    <button class="btn btn-primary" type="button" ng-click="uploadfile.cancel()">Annuler</button>
+  </div>
+</div>

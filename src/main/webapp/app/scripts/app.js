@@ -10,12 +10,12 @@
  */
 angular
   .module('petstoreFrontApp', [
-    'ngCookies',
     'ngResource',
     'ngRoute',
     'ngSanitize',
     'ui.bootstrap',
     'ngTagsInput',
+    'ngFileUpload',
     'smart-table'
   ])
   .constant('CONSTANTS', (function () {

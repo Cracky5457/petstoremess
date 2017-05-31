@@ -1,5 +1,6 @@
 package com.petstore.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,10 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 @Entity
 @Table(
@@ -30,8 +28,7 @@ public class PetTagEntity {
 	@JoinColumn(name="FK_PET", referencedColumnName="IDT_PET")
 	private PetEntity pet;
 	
-	@Cascade(CascadeType.SAVE_UPDATE)
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
 	@JoinColumn(name="FK_TAG", referencedColumnName="IDT_TAG")
 	private TagEntity tag;
 

@@ -8,7 +8,7 @@
  * Controller of the petstoreFrontApp
  */
 angular.module('petstoreFrontApp')
-  .controller('MainCtrl', function (CONSTANTS,$uibModal,PetsApiFactory) {
+  .controller('MainCtrl', function (CONSTANTS,$uibModal,PetsApiFactory, Upload) {
 
   	var me = this;
 
@@ -114,21 +114,21 @@ angular.module('petstoreFrontApp')
 
        var modalInstance = $uibModal.open({
             animation: true,
-            templateUrl: 'views/modals/imagepet.html',
-            controller: 'ModalImagePetCtrl',
-            controllerAs: 'imagepet',
-            size: 'lg',
-            resolve: {
-                items: function () {
-                  return {
-                    pet: petSelected
-                  };
-                }
-              }
+            templateUrl: 'views/modals/uploadfile.html',
+            controller: 'ModalUploadFileCtrl',
+            controllerAs: 'uploadfile',
+            size: 'lg'
           });
 
-          modalInstance.result.then(function (image) {
-            console.log(image);
+          modalInstance.result.then(function (file) {
+            Upload.upload({
+                    url: CONSTANTS.USERS_DOMAIN + "/pet/" + petSelected.id +"/uploadImage" ,
+                    file: file
+                }).progress(function (evt) {
+
+                }).success(function (data, status, headers, config) {
+
+                });
           });
     }
 

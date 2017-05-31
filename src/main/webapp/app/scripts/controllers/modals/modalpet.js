@@ -36,6 +36,8 @@
 
  	  	if(items.pet != null) {
  	  		this.petModel = items.pet;
+
+				 this.title = 'Update';
  	  	}
  	  }
 

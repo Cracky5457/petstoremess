@@ -3,6 +3,7 @@ package com.petstore.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,8 +17,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
@@ -40,18 +39,15 @@ public class PetEntity extends AbstractEntity {
     @Column(name = "STATUS")
 	private String status;
 	
-    @Cascade(CascadeType.SAVE_UPDATE)
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
 	@JoinColumn(name = "CATEGORY_PET", referencedColumnName = "IDT_CATEGORY")
 	private CategoryEntity category;
 	
 	/* We could have use @ManyToMany but I prefer create an intermediate entity manually with a total control on it*/
-    @Cascade(CascadeType.ALL)
-	@OneToMany(mappedBy = "pet", fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToMany(mappedBy = "pet", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PetTagEntity> listTags = new ArrayList<PetTagEntity>();
     
-    @Cascade(CascadeType.ALL)
-	@OneToMany(mappedBy = "pet", fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToMany(mappedBy = "pet", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PetImageEntity> listImages = new ArrayList<PetImageEntity>();
 	
 	public Long getId() {
@@ -102,6 +98,10 @@ public class PetEntity extends AbstractEntity {
 	public void setListImages(List<PetImageEntity> listImages) {
 		this.listImages.clear();
 		this.listImages.addAll(listImages);
+	}
+	
+	public void addImage(PetImageEntity image) {
+		this.listImages.add(image);
 	}
 	
 	
