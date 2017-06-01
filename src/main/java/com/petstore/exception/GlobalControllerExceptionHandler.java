@@ -1,10 +1,10 @@
 package com.petstore.exception;
 
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.DataAccessException;
@@ -31,13 +31,17 @@ public class GlobalControllerExceptionHandler  {
 	 * @throws IOException
 	 */
 	@ExceptionHandler(AccessDeniedException.class)
-	public ResponseEntity<String> accessDenied(Exception e, HttpServletResponse response) throws IOException {
+	public ResponseEntity<RESTResponse> accessDenied(Exception e, HttpServletResponse response) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+		RESTResponse r = new RESTResponse();
+		r.set_status(RESTResponse.STATUS_ERROR);
 		if (auth == null || auth instanceof AnonymousAuthenticationToken) {
-			return new ResponseEntity<String>("User not logged",HttpStatus.UNAUTHORIZED);
+			r.addErrorMessage("User not logged : "+e.getMessage());
+			return new ResponseEntity<RESTResponse>(r,HttpStatus.UNAUTHORIZED);
 		} else {
-			return new ResponseEntity<String>("User not authorized",HttpStatus.FORBIDDEN);
+			r.addErrorMessage("User not authorized : "+e.getMessage());
+			return new ResponseEntity<RESTResponse>(r,HttpStatus.FORBIDDEN);
 		}
 	}
 

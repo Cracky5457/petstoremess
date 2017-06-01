@@ -8,10 +8,19 @@
  * Controller of the petstoreFrontApp
  */
 angular.module('petstoreFrontApp')
-  .controller('LoginCtrl', function () {
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('LoginCtrl', function ($location,userApiFactory) {
+
+    this.username = "";
+    this.password = "";
+
+    this.login = function() {
+        userApiFactory.login(this.username,this.password).then(
+            function(response){
+                console.log("reload");
+                //$location.path('/');
+            },function(error) {
+                console.log("bad credentials");
+                console.log(error);
+            });
+    }
   });

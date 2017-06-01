@@ -1,5 +1,7 @@
 package com.petstore.controller;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.naming.AuthenticationException;
@@ -20,8 +22,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.petstore.PetStoreWebSecurityConfiguration;
+import com.petstore.dto.UserDTO;
+import com.petstore.dto.base.RESTResponse;
 
 @Controller
 @RequestMapping(value = "/user")
@@ -36,12 +41,14 @@ public class UserController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/login", method = { RequestMethod.GET })
-	public ResponseEntity<String> login(@RequestParam("user") String username, 
+	public ResponseEntity<RESTResponse> login(@RequestParam("user") String username, 
 										@RequestParam("password") String password, 
 										HttpServletRequest request,
 										HttpServletResponse response) throws Exception {
 		
 
+		RESTResponse r = new RESTResponse();
+		
 		if(username != null && password != null && !username.isEmpty() && !username.isEmpty()) {
 			
 			try {
@@ -56,16 +63,41 @@ public class UserController {
 				SecurityContextHolder.getContext().setAuthentication(returnAuth);
 				request.getSession().setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 				
-				System.out.println(SecurityContextHolder.getContext().getAuthentication());
-				return new ResponseEntity<String>("successful operation",HttpStatus.OK);
+				UserDTO userDto = new UserDTO();
+				
+				userDto.setUsername(username);
+				
+				request.getSession().setAttribute("logged_user", userDto);
+				
+				r.set_status(RESTResponse.STATUS_SUCCESS);
+				r.addSuccessMessage("successful operation");
+				
+				return new ResponseEntity<RESTResponse>(r,HttpStatus.OK);
+
 			} catch (BadCredentialsException e) {
-				return new ResponseEntity<String>("Invalid username/password supplied",HttpStatus.BAD_REQUEST);
+				r.set_status(RESTResponse.STATUS_ERROR);
+				r.addErrorMessage("Invalid username/password supplied");
+				return new ResponseEntity<RESTResponse>(r,HttpStatus.BAD_REQUEST);
 			}
 		} else {
-			return new ResponseEntity<String>("Invalid username/password supplied",HttpStatus.BAD_REQUEST);
+			r.set_status(RESTResponse.STATUS_ERROR);
+			r.addErrorMessage("Invalid username/password supplied");
+			return new ResponseEntity<RESTResponse>(r,HttpStatus.BAD_REQUEST);
 		}
-
-
+		
+	}
+	
+	/**
+	 * Get the user connected, return null if not logged in
+	 * 
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(method = RequestMethod.GET)
+	@ResponseBody
+	public UserDTO getUser(HttpServletRequest request) throws Exception {
+		return (UserDTO) request.getSession().getAttribute("logged_user");
 	}
 
 }

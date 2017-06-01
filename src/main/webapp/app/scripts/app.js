@@ -16,7 +16,8 @@ angular
     'ui.bootstrap',
     'ngTagsInput',
     'ngFileUpload',
-    'smart-table'
+    'smart-table',
+    'toastr'
   ])
   .constant('CONSTANTS', (function () {
     /* La racine du projet sur le serv*/
@@ -30,8 +31,9 @@ angular
       PET_STATUS : ['Available','Pending','Sold']
     };
   })())
-  .config(function ($routeProvider,$locationProvider) {
+  .config(function ($routeProvider,$locationProvider,$httpProvider) {
     $locationProvider.hashPrefix('');
+    $httpProvider.interceptors.push('responseObserver');
 
     $routeProvider
       .when('/', {
