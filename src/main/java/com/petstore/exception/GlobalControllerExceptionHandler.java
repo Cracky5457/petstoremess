@@ -47,6 +47,8 @@ public class GlobalControllerExceptionHandler  {
 			r.addErrorField(fieldError);
 		}
 		
+		r.addErrorMessage("Invalid input");
+		
 		return new ResponseEntity<RESTResponse>(r, HttpStatus.METHOD_NOT_ALLOWED);
 	}
 	

@@ -354,7 +354,7 @@ module.exports = function (grunt) {
         },
         cwd: '<%= yeoman.app %>',
         //on exclut la page de login de la production
-        src: ['views/{,*/}*.html', '!views/login.html'],
+        src: ['views/{,*/}*.html'],
         dest: '.tmp/templateCache.js'
       }
     },
