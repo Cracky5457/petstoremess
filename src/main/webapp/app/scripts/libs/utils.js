@@ -36,6 +36,21 @@ function displayToastError(response, toastr) {
         allowHtml: true
       });
       break;
+    case 401:
+      toastr.error(obj._errorMessage.join('<br><br>'), 'Erreur', {
+        allowHtml: true
+      });
+      break;
+    case 404:
+      toastr.error(obj._errorMessage.join('<br><br>'), 'Erreur', {
+        allowHtml: true
+      });
+      break;
+    case 405:
+      toastr.error(obj._errorMessage.join('<br><br>'), 'Erreur', {
+        allowHtml: true
+      });
+      break;
     default:
       toastr.error(response.statusText, 'Erreur');
   }

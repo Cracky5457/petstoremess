@@ -12,7 +12,9 @@
           ngf-accept="'image/*'" ngf-max-size="20MB" 
           ngf-resize="{width: 200}">Select</div>       
         
-          <div>
+          <br><br>
+
+          <div class="thumbnail" ng-show="uploadfile.file != null" style="width:200px">
             <img
               ngf-src="uploadfile.file"
               ngf-resize="{width: 200, quality: 0.9}" 

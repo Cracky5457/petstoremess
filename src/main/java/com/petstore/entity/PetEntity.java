@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +19,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
@@ -28,14 +31,12 @@ public class PetEntity extends AbstractEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id; 
 	
-    @NotNull
-    @NotEmpty
-    @Size(max = 10)
+    @NotBlank
+    @Size(max = 50)
 	@Column(name = "NAME",length = 50, nullable = false)
 	private String name;
 	
-    @NotNull
-    @NotEmpty
+    @NotBlank
     @Column(name = "STATUS")
 	private String status;
 	

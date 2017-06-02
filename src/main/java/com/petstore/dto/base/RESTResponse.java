@@ -3,6 +3,8 @@ package com.petstore.dto.base;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.petstore.exception.PetStoreException;
@@ -71,10 +73,23 @@ public class RESTResponse {
 	protected boolean includeMetaAttributes=true;
 
 	private List<String> _successMessage = new ArrayList<String>();
+	
+	/**
+	 * These are used for thraw others error or warning than field
+	 */
 	private List<String> _warningMessage = new ArrayList<String>();
 	private List<String> _errorMessage = new ArrayList<String>();
-	private List<String> _errorFields = new ArrayList<String>();
 
+	/**
+	 * This is used for thraw field error in formulary
+	 */
+	private List<SimpleFieldError> _errorFields = new ArrayList<SimpleFieldError>();
+
+	/**
+	 * If we don't want the default status we can override it
+	 */
+	private HttpStatus httpStatus;
+	
 	public boolean isIncludeMetaAttributes() {
 		return includeMetaAttributes;
 	}
@@ -91,17 +106,26 @@ public class RESTResponse {
 		this._status = _status;
 	}
 
-	public List<String> get_errorFields() {
+	public List<SimpleFieldError> get_errorFields() {
 		return _errorFields;
 	}
 
-	public void set_errorFields(List<String> _errorFields) {
+	public void set_errorFields(List<SimpleFieldError> _errorFields) {
 		this._errorFields = _errorFields;
 	}
 
-	public void addErrorField(String field) {
-		if(!this.get_errorFields().contains(field))
-			this.get_errorFields().add(field);
+	public void addErrorField(SimpleFieldError field) {
+		boolean found = false;
+		
+		for(SimpleFieldError error : this.get_errorFields()) {
+			if(error.getField().equals(field.getField())) {
+				found = true;
+			}
+		}
+		
+		if(!found) {
+			this._errorFields.add(field);
+		}
 	}
 
 	public void addWarningMessage(String mess) {
@@ -168,5 +192,15 @@ public class RESTResponse {
 	private void set_errorMessage(List<String> _errorMessage) {
 		this._errorMessage = _errorMessage;
 	}
+
+	public HttpStatus getHttpStatus() {
+		return httpStatus;
+	}
+
+	public void setHttpStatus(HttpStatus httpStatus) {
+		this.httpStatus = httpStatus;
+	}
+	
+	
 
 }

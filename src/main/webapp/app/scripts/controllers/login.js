@@ -17,7 +17,7 @@ angular.module('petstoreFrontApp')
         userApiFactory.login(this.username,this.password).then(
             function(response){
                 console.log("reload");
-                //$location.path('/');
+                $location.path('/');
             },function(error) {
                 console.log("bad credentials");
                 console.log(error);

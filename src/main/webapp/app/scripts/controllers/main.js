@@ -67,7 +67,7 @@ angular.module('petstoreFrontApp')
             resolve: {
                 items: function () {
                   return {
-                    pet: me.selectedPet
+                    state:CONSTANTS.STATE_ADD
                   };
                 }
               }
@@ -83,6 +83,25 @@ angular.module('petstoreFrontApp')
           });
    	}
 
+    this.viewPet = function(petSelected) {
+
+       var modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'views/modals/pet.html',
+            controller: 'ModalPetCtrl',
+            controllerAs: 'pet',
+            size: 'lg',
+            resolve: {
+                items: function () {
+                  return {
+                    state:CONSTANTS.STATE_VIEW,
+                    pet: petSelected
+                  };
+                }
+              }
+          });
+    }
+
     this.editPet = function(petSelected) {
 
        var modalInstance = $uibModal.open({
@@ -94,6 +113,7 @@ angular.module('petstoreFrontApp')
             resolve: {
                 items: function () {
                   return {
+                    state:CONSTANTS.STATE_EDIT,
                     pet: petSelected
                   };
                 }

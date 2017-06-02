@@ -39,7 +39,7 @@ public class PetController {
 	
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
-	public PetDTO savePet(@Valid @RequestBody PetDTO dto) {
+	public PetDTO savePet(@Valid @RequestBody PetDTO dto) throws PetStoreRulesException {
 		return petService.savePet(dto);
 	}
 	

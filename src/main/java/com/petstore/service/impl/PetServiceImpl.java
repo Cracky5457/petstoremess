@@ -48,25 +48,6 @@ public class PetServiceImpl implements PetService {
 	@Autowired
 	private PetImageDAO petImageDao;
 	
-	private PetDTO checkPet(PetDTO dto) throws PetStoreRulesException {
-		
-		if(dto.getName()==null || dto.getName().isEmpty()) {
-			dto.addErrorField("name");
-			dto.addErrorMessage("Name can't be empty");
-		}
-		
-		if(dto.getStatus()==null || dto.getStatus().isEmpty()) {
-			dto.addErrorField("status");
-			dto.addErrorMessage("Status can't be empty");
-		} else {
-			
-		}
-		
-		dto.validate();
-		
-		return dto;
-	}
-	
 	@Override
 	@Transactional
 	@Secured("ROLE_LIST_PET")
@@ -97,20 +78,36 @@ public class PetServiceImpl implements PetService {
 	 * We isolate the save function just for define the secured save in case of we don't wan't allow edit to someone who can create
 	 * @param dto
 	 * @return
+	 * @throws PetStoreRulesException 
 	 */
 	@Override
 	@Secured("ROLE_ADD_PET")
-	public PetDTO savePet(PetDTO dto) {
+	@Transactional(rollbackOn = Exception.class)
+	public PetDTO savePet(PetDTO dto) throws PetStoreRulesException {
 		return saveOrUpdatePet(dto);
 	}
 	
-	@Transactional(rollbackOn = Exception.class)
-	private PetDTO saveOrUpdatePet(PetDTO dto) {
+	private PetDTO saveOrUpdatePet(PetDTO dto) throws PetStoreRulesException {
 		
 		PetEntity petEntity = new PetEntity();
 		
+		/* update case */
 		if(dto.getId() != null) {
+			
+			if(dto.getId() <= 0) {
+				dto.addErrorMessage("Invalid ID supplied");
+				dto.setHttpStatus(HttpStatus.BAD_REQUEST);
+				dto.validate();
+			}
+			
 			petEntity = petDao.findFullPetById(dto.getId());
+			
+			/* we are in update but we don't find the entity, we thraw error */
+			if(petEntity == null) {
+				dto.addErrorMessage("Pet not found");
+				dto.setHttpStatus(HttpStatus.NOT_FOUND);
+				dto.validate();
+			}
 		}
 		
 		petEntity.setName(dto.getName());
@@ -170,14 +167,18 @@ public class PetServiceImpl implements PetService {
 	
 		PetEntity pet = null;
 		
-		if(petId != null) {
+		if(petId != null && petId > 0) {
 			pet = petDao.findById(petId);
 			
 			if(pet == null) {
 				response.addErrorMessage("Pet not found");
+				response.setHttpStatus(HttpStatus.NOT_FOUND);
+				
 			}
 		} else {
 			response.addErrorMessage("Invalid ID supplied");
+			response.setHttpStatus(HttpStatus.BAD_REQUEST);
+			
 		}
 		
 		response.validate();
@@ -207,9 +208,6 @@ public class PetServiceImpl implements PetService {
 		
 		petImage.setPet(petEntity);
 		petImage.setFileName(file.getOriginalFilename());
-		
-		System.out.println("fileName : " + file.getOriginalFilename());
-		System.out.println("image size : " + file.getSize());
 		
 		byte[] bytes = file.getBytes();
 		

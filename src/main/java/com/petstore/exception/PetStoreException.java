@@ -18,6 +18,8 @@ public class PetStoreException extends Exception {
 	public void setViewModel(RESTResponse viewModel) {
 		this.response = viewModel;
 	}
+	
+	
 
 }
 

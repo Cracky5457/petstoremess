@@ -28,17 +28,16 @@ angular.module('petstoreFrontApp')
             $location.path('login');
             break;
           case 400:
-            console.log("observer 400");
             displayToastError(errorResponse,toastr);
             break;
           case 403:
-
+            displayToastError(errorResponse,toastr);
             break;
           case 404:
-
+            displayToastError(errorResponse,toastr);
             break;
           case 500:
-
+            displayToastError(errorResponse,toastr);
             break;
         }
 

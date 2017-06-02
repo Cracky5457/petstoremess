@@ -28,7 +28,10 @@ angular
       USERS_DOMAIN: resource,
       SUFFIXE_DOMAIN: ".do",
 
-      PET_STATUS : ['Available','Pending','Sold']
+      PET_STATUS : ['Available','Pending','Sold'],
+      STATE_VIEW : "View",
+      STATE_EDIT : "Edit",
+      STATE_ADD  : "Add"
     };
   })())
   .config(function ($routeProvider,$locationProvider,$httpProvider) {
