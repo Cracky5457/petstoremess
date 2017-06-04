@@ -18,9 +18,13 @@
             <label for="category">Category</label>
             <input type="text" class="form-control" id="category" placeholder="category" ng-model="pet.petModel.category.name">
           </div>
-          <div class="form-group">
+          <div class="form-group" ng-show="!pet.isViewMode()">
             <label for="tags">Tags</label>
             <tags-input ng-model="pet.petModel.tags" display-property="name"></tags-input>
+          </div>
+          <div class="form-group" ng-show="pet.isViewMode()">
+            <label for="tags">Tags</label>
+            <input type="text" class="form-control" id="tags" ng-value="pet.displayTags(pet.petModel.tags)"></input>
           </div>
           <div class="row" ng-show="pet.petModel.photoUrls != null && pet.petModel.photoUrls.length > 0">
               <div class = "col-sm-6 col-md-3" ng-repeat="photo in pet.petModel.photoUrls">

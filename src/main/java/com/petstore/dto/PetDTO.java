@@ -115,4 +115,12 @@ public class PetDTO extends RESTResponse{
 		this.photoUrls = photoUrls;
 	}
 
+	@Override
+	public String toString() {
+		return "PetDTO [id=" + id + ", name=" + name + ", status=" + status + ", tags=" + tags + ", category="
+				+ category + ", photoUrls=" + photoUrls + "]";
+	}
+	
+	
+
 }

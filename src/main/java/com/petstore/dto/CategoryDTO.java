@@ -1,9 +1,15 @@
 package com.petstore.dto;
 
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class CategoryDTO {
 
 	private long id;
 	
+	@NotEmpty
+	@Size(max=50)
 	private String name;
 
 	public long getId() {

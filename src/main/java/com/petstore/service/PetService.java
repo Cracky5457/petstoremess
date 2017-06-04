@@ -18,4 +18,5 @@ public interface PetService {
 	public RESTResponse addImageToPet(Long petId, MultipartFile file) throws PetStoreRulesException, IOException;
 	public void deleteById(Long petId) throws PetStoreRulesException;
 	public ResponseEntity<byte[]> getImageById(Long imageId);
+	public void deleteAll();
 }

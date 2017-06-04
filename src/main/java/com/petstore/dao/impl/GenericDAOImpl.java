@@ -29,9 +29,20 @@ public class GenericDAOImpl<PK extends Serializable, T> implements GenericDAO<PK
 		Session s = sessionFactory.getCurrentSession();
 		return s;
 	}
-
+	
 	public void delete(T entity) {
 		getSession().delete(entity);
+	}
+	
+	public void deleteAll() {
+		
+		Session s = sessionFactory.getCurrentSession();
+		
+		List<T> entities = findAll();
+		
+		for(T entity : entities) {
+			s.delete(entity);
+		}
 	}
 
 	@SuppressWarnings("unchecked")

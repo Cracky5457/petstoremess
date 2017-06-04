@@ -43,7 +43,6 @@ angular.module('petstoreFrontApp')
        if(!isUndefinedOrNull(tags)) {
          for(i = 0; i < tags.length; i++) {
            
-           console.log(tags[i]);
            if(i==0) {
              stags+=tags[i].name;
            } else {
@@ -173,7 +172,9 @@ angular.module('petstoreFrontApp')
             .then(function () {
               me.loadPets();
             });
-        });      
+        },function(error) {
+
+        });    
     }
 
   });

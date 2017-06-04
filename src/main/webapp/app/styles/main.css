@@ -57,3 +57,12 @@
         border-top:0 none;
     }
 }
+
+#table-pets td {
+    vertical-align: middle;
+}
+
+#avatar-pet {
+    max-height: 80px;
+    max-width: 150px;
+}

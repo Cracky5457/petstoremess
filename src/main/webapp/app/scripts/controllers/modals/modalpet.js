@@ -50,6 +50,27 @@
 			return "Save";
 		}
 
+	  this.displayTags = function(tags) {
+
+       var stags = "";
+
+       var i = 0;
+
+       if(!isUndefinedOrNull(tags)) {
+         for(i = 0; i < tags.length; i++) {
+           
+           if(i==0) {
+             stags+=tags[i].name;
+           } else {
+             stags+=","+tags[i].name;
+           }
+         }
+       }
+
+       return stags;
+
+     }
+
 	  this.ok = function () {
 	    $uibModalInstance.close(this.petModel);
 	  };

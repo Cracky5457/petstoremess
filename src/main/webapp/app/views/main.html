@@ -8,7 +8,7 @@
 
   <div class="row">
     <div class="col-xs-12">
-      <table st-table="main.displayListPets" st-safe-src="main.listPets" class="table table-striped table-no-border">
+      <table id="table-pets" st-table="main.displayListPets" st-safe-src="main.listPets" class="table table-striped table-no-border">
 
         <thead>
           <tr>
@@ -40,16 +40,18 @@
           </tr>
           <tr ng-repeat="pet in main.displayListPets">
             <td>
+              <!--
               <span ng-if="pet.photoUrls != null && pet.photoUrls.length > 0">
-                <img style="width:30px;" ng-src="{{pet.photoUrls[0]}}">
+                <img id="avatar-pet" ng-src="{{pet.photoUrls[0]}}">
               </span>
+              -->
               {{pet.name}}
             </td>
-            <td>{{pet.status}}</td>
+            <td valign="middle">{{pet.status}}</td>
             <td>{{pet.category.name}}</td>
             <td>{{main.displayTags(pet.tags)}}</td>
             <td>
-              <i class="fa fa-trash clickable" ng-click="main.removePet(54)" aria-hidden="true"></i>
+              <i class="fa fa-trash clickable" ng-click="main.removePet(pet.id)" aria-hidden="true"></i>
               <i class="fa fa-eye clickable" ng-click="main.viewPet(pet)" aria-hidden="true"></i>
               <i class="fa fa-pencil-square-o clickable" ng-click="main.editPet(pet)" aria-hidden="true"></i>
               <i class="fa fa-file-image-o clickable" ng-click="main.addImage(pet)" aria-hidden="true"></i>

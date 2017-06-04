@@ -12,11 +12,14 @@ public interface GenericDAO<PK extends Serializable, T> {
 	public void save(AbstractEntity entity);
 
 	public void delete(T entity);
+	
+	public void deleteAll();
 
 	public List<T> findAll();
 	
 	public void saveOrUpdate(AbstractEntity entity);
 
 	public void merge(AbstractEntity entity);
+	
 
 }

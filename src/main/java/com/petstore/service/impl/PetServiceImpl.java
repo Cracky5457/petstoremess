@@ -56,10 +56,12 @@ public class PetServiceImpl implements PetService {
 		
 		List<PetDTO> listPetDto = new ArrayList<PetDTO>();
 		
-		for(PetEntity entity : listPetEntity) {
-			PetDTO dto = new PetDTO(entity);
-			
-			listPetDto.add(dto);
+		if(listPetEntity != null) {
+			for(PetEntity entity : listPetEntity) {
+				PetDTO dto = new PetDTO(entity);
+				
+				listPetDto.add(dto);
+			}
 		}
 		
 		return listPetDto;
@@ -141,7 +143,8 @@ public class PetServiceImpl implements PetService {
 		/** (create) attach category **/
 		CategoryEntity categoryEntity = null;
 		
-		categoryEntity = categoryDao.findCategoryByName(dto.getCategory().getName());
+		if(dto.getCategory() != null)
+			categoryEntity = categoryDao.findCategoryByName(dto.getCategory().getName());
 		
 		if(categoryEntity == null) {
 			categoryEntity = new CategoryEntity();
@@ -236,17 +239,13 @@ public class PetServiceImpl implements PetService {
 
 	    headers.set("content-length",Integer.toString(data.length));
 
-	    try {
-		    FileOutputStream out = new FileOutputStream("/test.jpg");
-			out.write(data);
-		    out.close();
-		    
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 	    return new ResponseEntity<byte[]>(data, headers, HttpStatus.CREATED);
+	}
+
+	@Override
+	@Transactional(rollbackOn=Exception.class)
+	public void deleteAll() {
+		petDao.deleteAll();
 	}
 	
 	
