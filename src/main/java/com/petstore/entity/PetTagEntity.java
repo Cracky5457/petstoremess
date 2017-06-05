@@ -55,6 +55,12 @@ public class PetTagEntity {
 	public void setTag(TagEntity tag) {
 		this.tag = tag;
 	}
+
+	@Override
+	public String toString() {
+		return "PetTagEntity [id=" + id + ", pet=" + pet + ", tag=" + tag + "]";
+	}
+	
 	
 	
 	

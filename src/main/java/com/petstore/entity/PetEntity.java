@@ -104,10 +104,10 @@ public class PetEntity extends AbstractEntity {
 	public void addImage(PetImageEntity image) {
 		this.listImages.add(image);
 	}
-	
-	
-	
-	
-	
-	
+
+	@Override
+	public String toString() {
+		return "PetEntity [id=" + id + ", name=" + name + "]";
+	}
+
 }

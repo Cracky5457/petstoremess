@@ -38,6 +38,12 @@ public class CategoryEntity extends AbstractEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	@Override
+	public String toString() {
+		return "CategoryEntity [id=" + id + ", name=" + name + "]";
+	}
+	
 	
 	
 }

@@ -25,7 +25,7 @@ public class GenericDAOImpl<PK extends Serializable, T> implements GenericDAO<PK
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	protected Session getSession() {
+	public Session getSession() {
 		Session s = sessionFactory.getCurrentSession();
 		return s;
 	}

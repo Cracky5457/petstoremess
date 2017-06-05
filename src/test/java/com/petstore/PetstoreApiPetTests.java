@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.hibernate.SessionFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +38,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.petstore.dao.PetDAO;
 import com.petstore.dto.CategoryDTO;
 import com.petstore.dto.PetDTO;
 import com.petstore.dto.TagDTO;
@@ -64,8 +66,14 @@ public class PetstoreApiPetTests {
     @Autowired
     private WebApplicationContext webApplicationContext;
     
+	@Autowired
+	private SessionFactory sessionFactory;
+    
     @Autowired
     PetService petService;
+    
+    @Autowired
+    PetDAO petDao;
 
     @Before
     public void setup() throws Exception {
@@ -79,7 +87,14 @@ public class PetstoreApiPetTests {
     
     @After
     public void after() {
+    	
+    	sessionFactory.getCurrentSession().flush();
+    	
     	petService.deleteAll();
+    	
+    	sessionFactory.getCurrentSession().flush();
+
+    	
     }
     
     /**
@@ -155,7 +170,7 @@ public class PetstoreApiPetTests {
 	public void addPetApiTest_ValidationSuccessed() throws IOException, Exception {
 		
 		PetDTO dto = new PetDTO();
-		dto.setName("Nala");
+		dto.setName("Jack");
 		dto.setStatus("Sold");
 		
 		CategoryDTO catDto = new CategoryDTO();
@@ -181,17 +196,8 @@ public class PetstoreApiPetTests {
 		
 		PetDTO dto = addPet();
 		
-		System.out.println(dto);
-		
-//		PetDTO dto = new PetDTO();
-//		dto.setId(new Long(1));
-//		dto.setName("Nala");
-//		dto.setStatus("Available");
-//		
-//		CategoryDTO catDto = new CategoryDTO();
-//		catDto.setName("Cat");
-//		
-//		dto.setCategory(catDto);
+		dto.setName("Jack");
+
 		
 		mockMvc.perform(post("/pet")
                 .content(json(dto))
