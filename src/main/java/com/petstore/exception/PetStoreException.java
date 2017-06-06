@@ -11,11 +11,11 @@ public class PetStoreException extends Exception {
 		super(message);
 	}
 	
-	public RESTResponse getViewModel() {
+	public RESTResponse getRESTResponse() {
 		return response;
 	}
 
-	public void setViewModel(RESTResponse viewModel) {
+	public void setRESTResponse(RESTResponse viewModel) {
 		this.response = viewModel;
 	}
 	

@@ -192,10 +192,11 @@ public class PetServiceImpl implements PetService {
 	@Override
 	@Transactional(rollbackOn = Exception.class)
 	@Secured("ROLE_EDIT_PET")
-	public RESTResponse addImageToPet(Long petId, MultipartFile file) throws PetStoreRulesException, IOException {
-		RESTResponse response = new RESTResponse();
+	public PetDTO addImageToPet(Long petId, MultipartFile file) throws PetStoreRulesException, IOException {
 		
 		PetEntity petEntity = petDao.findById(petId);
+		
+		PetDTO response = new PetDTO(petEntity);
 		
 		if(petEntity == null) {
 			response.addErrorMessage("Pet not found");
@@ -219,6 +220,15 @@ public class PetServiceImpl implements PetService {
 		petEntity.addImage(petImage);
 		
 		petDao.saveOrUpdate(petEntity);
+		
+		List<String> photoUrls= new ArrayList<String>();
+		if(petEntity.getListImages() != null && !petEntity.getListImages().isEmpty()) {
+			for(PetImageEntity cpetImage : petEntity.getListImages()) {
+				photoUrls.add("/pet/image/"+cpetImage.getId());
+			}
+		}
+		
+		response.setPhotoUrls(photoUrls);
 		
 		return response;
 	}

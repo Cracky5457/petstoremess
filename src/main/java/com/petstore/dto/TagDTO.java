@@ -2,13 +2,13 @@ package com.petstore.dto;
 
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 public class TagDTO {
 
 	private Long id;
 	
-	@NotEmpty
+	@NotBlank
 	@Size(max=50)
 	private String name;
 

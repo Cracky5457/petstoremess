@@ -24,6 +24,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.petstore.dao.CategoryDAO;
 import com.petstore.dao.PetDAO;
+import com.petstore.dao.TagDAO;
 import com.petstore.entity.CategoryEntity;
 import com.petstore.entity.PetEntity;
 import com.petstore.entity.PetTagEntity;
@@ -41,6 +42,9 @@ public class PetstoreDaoPetTests {
 
 	
     @Autowired
+    TagDAO tagDao;
+    
+    @Autowired
     CategoryDAO categoryDao;
     
     @Autowired
@@ -56,26 +60,18 @@ public class PetstoreDaoPetTests {
     }
     
     @After
+    /**
+     * We clean the DB after each test
+     */
     public void after() {
 
     	sessionFactory.getCurrentSession().flush();
-    	
-    	System.out.println("delete");
-		List<PetEntity> pets = petDao.findAll();
 		
-		if(pets != null) {
-			System.out.println("size before : " + pets.size());
-		}
-    	
 		petDao.deleteAll();
+		categoryDao.deleteAll();
+		tagDao.deleteAll();
     	
     	sessionFactory.getCurrentSession().flush();
-    	
-		List<PetEntity> petsAfter = petDao.findAll();
-		
-		if(pets != null) {
-			System.out.println("size after : " + petsAfter.size());
-		}
 
     }
     
@@ -95,8 +91,7 @@ public class PetstoreDaoPetTests {
 		
 		List<PetTagEntity> petTags = new ArrayList<PetTagEntity>();
 		
-		categoryDao.saveOrUpdate(catEntity);
-		
+
 		TagEntity tag1 = new TagEntity();
 		tag1.setName("Kitten");
 		
@@ -124,37 +119,85 @@ public class PetstoreDaoPetTests {
     
     @Test
     @Transactional
-    public void savePet() {
+    public void deleteMultiplesPets() {
     	PetEntity pet = addPet();
+    	PetEntity pet2 = addPet();
     	
-    	assertEquals(new Long(1), pet.getId());
-    	assertNotNull(pet.getCategory());
-    	assertEquals(pet.getCategory().getId(), new Long(1));
-    	
+    	assertNotNull(pet.getId());
+    	assertNotNull(pet2.getId());
+
     	List<PetEntity> pets = petDao.findAll();
-    	assertEquals(1, pets.size());
+    	assertEquals(2, pets.size());
+    	
+    	petDao.deleteAll();
+    	
+    	sessionFactory.getCurrentSession().flush();
+    	
+    	pets = petDao.findAll();
+    	assertEquals(0, pets.size());
+    	
     }
     
     @Test
     @Transactional
+    public void savePet() {
+    	PetEntity pet = addPet();
+    	
+    	sessionFactory.getCurrentSession().flush();
+    	
+    	assertEquals("Nala", pet.getName());
+    	assertNotNull(pet.getId());
+    	assertNotNull(pet.getCategory().getId());
+    	assertEquals("Cat", pet.getCategory().getName());
+    	assertEquals(pet.getListTags().size(), 2);
+    	
+    	List<PetEntity> pets = petDao.findAll();
+    	assertEquals(1, pets.size());
+    }
+ 
+    
+    @Test
+    @Transactional
     public void updatePet() {
-//    	PetEntity pet = addPet();
-//    	
-//    	assertEquals("Nala", pet.getName());
-//    	assertEquals(new Long(1), pet.getId());
-//    	
-//    	assertEquals("Cat", pet.getCategory().getName());
-//    	
-//    	sessionFactory.getCurrentSession().flush();
-//    	
-//    	pet.setName("Sylla");
-//    	
-//    	petDao.saveOrUpdate(pet);
-//    	
-//    	assertEquals("Sylla", pet.getName());
-//    	
-//    	List<PetEntity> pets = petDao.findAll();
-//    	assertEquals(1, pets.size());
+    	PetEntity pet = addPet();
+    	
+    	assertEquals("Nala", pet.getName());
+    	assertNotNull(pet.getId());
+    	assertEquals("Cat", pet.getCategory().getName());
+    	assertEquals(pet.getListTags().size(), 2);
+    	
+    	sessionFactory.getCurrentSession().flush();
+    	
+    	TagEntity kittenTag = tagDao.findTagByName("Kitten");
+    	    	
+    	pet.setName("Sylla");
+    	
+    	List<PetTagEntity> petTags = pet.getListTags();
+    	
+    	petTags.get(0).getTag().setName("RenamedTag");
+    	
+    	PetTagEntity pt3 = new PetTagEntity();
+    	TagEntity t3 = new TagEntity();
+    	t3.setName("NewTag");
+    	
+    	pt3.setTag(t3);
+    	pt3.setPet(pet);
+    	
+    	pet.setListTags(petTags);
+
+    	petDao.saveOrUpdate(pet);
+    	
+    	sessionFactory.getCurrentSession().flush();
+    	
+    	TagEntity renamedTag = tagDao.findTagByName("RenamedTag");
+    	
+    	// It should be the same TagEntity just renamed
+    	assertEquals(renamedTag.getId(), kittenTag.getId());
+    	
+    	assertEquals("Sylla", pet.getName());
+    	
+    	List<PetEntity> pets = petDao.findAll();
+    	assertEquals(1, pets.size());
     }
     
 

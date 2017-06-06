@@ -23,6 +23,16 @@ Don't forget to exlude "node_modules" from ecliplse ( properties -> resource fit
 
 ## build
 
+### One click build
+
+Build the war with profil "release"
+
+/!\ Don't have the "Target" folder opened in cmd or windows, if delete target failed, try `Project -> Clean`
+
+`Run as Maven build ...` with goal `clean install` and profil `release`
+
+### Alternative Two-Steps build ( front then war )
+
 Build the front
 
 `cd src\main\webapp`

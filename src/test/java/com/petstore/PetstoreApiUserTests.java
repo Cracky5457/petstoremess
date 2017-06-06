@@ -38,7 +38,7 @@ public class PetstoreApiUserTests {
 		mockMvc.perform(get("/user/logout")
                 .content("")
                 .contentType(contentType))
-				.andExpect(status().isOk());
+				.andExpect(status().isFound()); // movedTemporaly seem deprecated
     }
     
 

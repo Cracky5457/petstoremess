@@ -11,20 +11,22 @@ import com.petstore.exception.PetStoreException;
 import com.petstore.exception.PetStoreRulesException;
 
 
+
 /**
- *
+ * 
+ * Superclass for all DTO objects,
+ * This is use for add/edit operation on entity for return the new/edited entity
+ * 
+ * You can remove metadata ( error, success warning ) if you want using setIncludeMetaAttributes(false)
+ * use setIncludeMetaAttributes for child of the main entity, we don't want any redundance
+ * 
+ * A 201 response MAY contain an ETag response header field indicating 
+ * the current value of the entity tag for the requested variant just created, 
+ * https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.19
+ * 
  */
 @JsonFilter("psFilter")
 public class RESTResponse {
-
-	public static final String SAVE_SUCCESS = "Sauvegarde réussie";
-	public static final String SAVE_ERROR = "La Sauvegarde a échoué";
-	public static final String UPDATE_SUCCESS = "Les données ont été mises à jour";
-	public static final String UPDATE_ERROR = "La mise à jour a échoué";
-	public static final String DELETE_SUCCESS = "Les données ont été effacées";
-	public static final String DELETE_ERROR = "Les données n'ont pas pu être effacées";
-	public static final String FOUND = "La recherche a réussi";
-	public static final String NOT_FOUND = "Les données n'ont pas pu être trouvées";
 
 	public static final int STATUS_SUCCESS = 1;
 	public static final int STATUS_WARNING = 0;
@@ -88,6 +90,7 @@ public class RESTResponse {
 	/**
 	 * If we don't want the default status we can override it
 	 */
+	@JsonIgnore
 	private HttpStatus httpStatus;
 	
 	public boolean isIncludeMetaAttributes() {
@@ -164,7 +167,7 @@ public class RESTResponse {
 	public void validate() throws PetStoreRulesException {
 		if (!this.get_errorFields().isEmpty() || !this.get_errorMessage().isEmpty()) {
 			PetStoreRulesException e = new PetStoreRulesException("Erreur de validation " + this.getClass().getName());
-			e.setViewModel(this);
+			e.setRESTResponse(this);
 			throw e;
 		} else if (!this._warningMessage.isEmpty()) {
 			this._status = 0;
@@ -180,7 +183,7 @@ public class RESTResponse {
 		PetStoreException e = new PetStoreException("Erreur lancée " + this.getClass().getName());
 		this.set_status(STATUS_ERROR);
 		this.addErrorMessage(message);
-		e.setViewModel(this);
+		e.setRESTResponse(this);
 		throw e;
 	}
 

@@ -1,6 +1,7 @@
 package com.petstore;
 
 import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -24,11 +25,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -38,7 +34,9 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.petstore.dao.CategoryDAO;
 import com.petstore.dao.PetDAO;
+import com.petstore.dao.TagDAO;
 import com.petstore.dto.CategoryDTO;
 import com.petstore.dto.PetDTO;
 import com.petstore.dto.TagDTO;
@@ -73,6 +71,12 @@ public class PetstoreApiPetTests {
     PetService petService;
     
     @Autowired
+    CategoryDAO categoryDAO;
+    
+    @Autowired
+    TagDAO tagDao;
+    
+    @Autowired
     PetDAO petDao;
 
     @Before
@@ -90,12 +94,13 @@ public class PetstoreApiPetTests {
     	
     	sessionFactory.getCurrentSession().flush();
     	
-    	petService.deleteAll();
+    	petDao.deleteAll();
+    	categoryDAO.deleteAll();
+    	tagDao.deleteAll();
     	
     	sessionFactory.getCurrentSession().flush();
-
-    	
     }
+   
     
     /**
      * Add a pet in the H2 in memory database
@@ -161,7 +166,7 @@ public class PetstoreApiPetTests {
 	}
 	
     /**
-     * Valid add pet form, should return 200
+     * Valid add pet form, should return 201
      * 
      * @throws IOException
      * @throws Exception 
@@ -181,12 +186,11 @@ public class PetstoreApiPetTests {
 		mockMvc.perform(post("/pet")
                 .content(json(dto))
                 .contentType(contentType))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         
 	}
 	
     /**
-     * Valid add pet form, should return 200
      * 
      * @throws IOException
      * @throws Exception 
@@ -202,10 +206,117 @@ public class PetstoreApiPetTests {
 		mockMvc.perform(post("/pet")
                 .content(json(dto))
                 .contentType(contentType))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         
 	}
 
+	
+    /**
+     * 
+     * @throws IOException
+     * @throws Exception 
+     */
+	@Test
+	public void deletePetApiTest_Failed400() throws IOException, Exception {
+		
+		addPet();
+
+		mockMvc.perform(delete("/pet/-54")
+                .content("")
+                .contentType(contentType))
+                .andExpect(status().isBadRequest());
+        
+	}
+	
+    /**
+     * 
+     * @throws IOException
+     * @throws Exception 
+     */
+	@Test
+	public void deletePetApiTest_Failed404() throws IOException, Exception {
+		
+		addPet();
+
+		mockMvc.perform(delete("/pet/587844")
+                .content("")
+                .contentType(contentType))
+                .andExpect(status().isNotFound());
+        
+	}
+	
+    /**
+     * 
+     * @throws IOException
+     * @throws Exception 
+     */
+	@Test
+	public void deletePetApiTest_Successed() throws IOException, Exception {
+		
+		PetDTO pet = addPet();
+
+		mockMvc.perform(delete("/pet/"+pet.getId())
+                .content("")
+                .contentType(contentType))
+                .andExpect(status().isOk());
+		
+		sessionFactory.getCurrentSession().flush();
+		
+		List<PetEntity> pets = petDao.findAll();
+		
+		assertEquals(0, pets.size());
+        
+	}
+	
+    /**
+     * Return list of pets ( expected 2 )
+     * 
+     * @throws IOException
+     * @throws Exception 
+     */
+	@Test
+	public void listPetApiTest_ok() throws IOException, Exception {
+		
+		PetDTO pet = addPet();
+		
+		sessionFactory.getCurrentSession().flush();
+		
+		PetDTO pet2 = addPet();
+		
+		sessionFactory.getCurrentSession().flush();
+
+		mockMvc.perform(get("/pet/list")
+                .content("")
+                .contentType(contentType))
+				.andExpect(status().isOk());
+		
+		List<PetEntity> pets = petDao.findAll();
+		
+		assertEquals(2, pets.size());
+        
+	}
+	
+    /**
+     * Return empty list of pets ( expected 0 )
+     * 
+     * @throws IOException
+     * @throws Exception 
+     */
+	@Test
+	public void listPetApiTest_nocontent() throws IOException, Exception {
+
+		mockMvc.perform(get("/pet/list")
+                .content("")
+                .contentType(contentType))
+				.andExpect(status().isNoContent());
+		
+		List<PetEntity> pets = petDao.findAll();
+		
+		assertEquals(0, pets.size());
+        
+	}
+	
+	
     @SuppressWarnings("unchecked")
 	protected String json(Object o) throws IOException {
         MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();

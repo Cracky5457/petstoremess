@@ -1,6 +1,8 @@
 package com.petstore.dto;
 
-public class UserDTO {
+import com.petstore.dto.base.RESTResponse;
+
+public class UserDTO extends RESTResponse{
 
 	private Long id; 
 	

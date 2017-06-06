@@ -3,6 +3,7 @@ package com.petstore.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -23,8 +24,10 @@ public class PetDTO extends RESTResponse{
 	@NotBlank
 	private String status;
 	
+	@Valid
 	private List<TagDTO> tags;
 	
+	@Valid
 	private CategoryDTO category;
 	
 	private List<String> photoUrls;

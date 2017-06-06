@@ -3,6 +3,8 @@ package com.petstore.controller;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.io.IOUtils;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.petstore.dao.PetImageDAO;
@@ -38,6 +41,7 @@ public class PetController {
     PetImageDAO petImageDao;
 	
 	@RequestMapping(method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
 	public PetDTO savePet(@Valid @RequestBody PetDTO dto) throws PetStoreRulesException {
 		return petService.savePet(dto);
@@ -50,8 +54,9 @@ public class PetController {
 	}
 	
 	@RequestMapping(value = "/{petId}/uploadImage", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
-	public RESTResponse uploadImageForPet(@PathVariable Long petId,@RequestParam("file") MultipartFile file) throws PetStoreRulesException, IOException {
+	public PetDTO uploadImageForPet(@PathVariable Long petId,@RequestParam("file") MultipartFile file) throws PetStoreRulesException, IOException {
 		
 		return petService.addImageToPet(petId, file);
 	}
@@ -74,10 +79,17 @@ public class PetController {
 	
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public List<PetDTO> findAllPets() {
+	public List<PetDTO> findAllPets(HttpServletResponse response) {
 		
-		return petService.findAllPets();
+		List<PetDTO> pets = petService.findAllPets();
 		
+		if(pets.isEmpty()) {
+			response.setStatus(204); // successed but no content
+		} else {
+			response.setStatus(200); // ok
+		}
+		
+		return pets;
 	}
 
 }

@@ -1,12 +1,14 @@
 package com.petstore.controller;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import javax.naming.AuthenticationException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -70,10 +72,10 @@ public class UserController {
 				
 				request.getSession().setAttribute("logged_user", userDto);
 				
-				r.set_status(RESTResponse.STATUS_SUCCESS);
-				r.addSuccessMessage("successful operation");
+				userDto.set_status(RESTResponse.STATUS_SUCCESS);
+				userDto.addSuccessMessage("successful operation");
 				
-				return new ResponseEntity<RESTResponse>(r,HttpStatus.OK);
+				return new ResponseEntity<RESTResponse>(userDto,HttpStatus.OK);
 
 			} catch (BadCredentialsException e) {
 				r.set_status(RESTResponse.STATUS_ERROR);
@@ -88,12 +90,36 @@ public class UserController {
 		
 	}
 	
-	@RequestMapping(value="/logout", method = RequestMethod.GET)
-	public void logout (HttpServletRequest request, HttpServletResponse response) {
-	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	    if (auth != null){    
-	        new SecurityContextLogoutHandler().logout(request, response, auth);
-	    }
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public void logoutPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null) {
+			new SecurityContextLogoutHandler().logout(request, response, auth);
+		}
+
+		HttpSession session = request.getSession(false);
+
+		if (session != null)
+			session.invalidate();
+
+		/* Clear cookies */
+		if (request.getCookies() != null) {
+			for (Cookie cookie : request.getCookies()) {
+				if (cookie.getName().equals("SMSESSION"))
+					continue;
+
+				if (cookie.getName().equals("cnUser"))
+					continue;
+
+				cookie.setValue("");
+				cookie.setMaxAge(-1);
+				cookie.setPath(getContextPath(request));
+
+				response.addCookie(cookie);
+			}
+		}
+
+		response.sendRedirect(getLoginUrl(request));
 	}
 	
 	/**
@@ -107,6 +133,31 @@ public class UserController {
 	@ResponseBody
 	public UserDTO getUser(HttpServletRequest request) throws Exception {
 		return (UserDTO) request.getSession().getAttribute("logged_user");
+	}
+	
+	/**
+	 * @param request
+	 * @return
+	 * @throws MalformedURLException
+	 */
+	private String getLoginUrl(HttpServletRequest request) throws MalformedURLException {
+		return getContextPath(request) + "#/login";
+	}
+
+	
+	private String getContextPath(HttpServletRequest request) throws MalformedURLException {
+		// case for custom header grunt
+		if (request.getHeader("x-custom-dev-header") != null) {
+			return "/";
+		}
+		
+		String url = new URL(request.getScheme(), request.getServerName(), request.getServerPort(),
+				request.getContextPath()).toString();
+
+		if (url != null && !url.isEmpty() && !url.endsWith("/"))
+			url += "/";
+
+		return url;
 	}
 
 }

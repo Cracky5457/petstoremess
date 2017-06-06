@@ -5,7 +5,7 @@
 
 	<groupId>com.petstore</groupId>
 	<artifactId>petstore</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2</version>
 	<packaging>war</packaging>
 
 	<name>petstore</name>
@@ -177,7 +177,7 @@
 	
 	                    <configuration>
 	                        <installDirectory>target</installDirectory>
-	                        <workingDirectory>src/main/webapp/dist</workingDirectory>
+	                        <workingDirectory>src/main/webapp</workingDirectory>
 	                    </configuration>
 	                </plugin>
 	            </plugins>

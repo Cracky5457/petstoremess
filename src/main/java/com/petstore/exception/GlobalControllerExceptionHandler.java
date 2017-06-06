@@ -97,29 +97,29 @@ public class GlobalControllerExceptionHandler  {
 	public ResponseEntity<RESTResponse> psException(PetStoreException e, HttpServletResponse response) throws IOException {
 		logger.error("---------------PetStoreException --------"+e.getMessage());
 
-		e.getViewModel().set_status(RESTResponse.STATUS_ERROR);
+		e.getRESTResponse().set_status(RESTResponse.STATUS_ERROR);
 		
 		HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 		
-		if(e.getViewModel().getHttpStatus() != null) {
-			httpStatus = e.getViewModel().getHttpStatus();
+		if(e.getRESTResponse().getHttpStatus() != null) {
+			httpStatus = e.getRESTResponse().getHttpStatus();
 		}
 		
-		return new ResponseEntity<RESTResponse>(e.getViewModel(), httpStatus);
+		return new ResponseEntity<RESTResponse>(e.getRESTResponse(), httpStatus);
 	}
 	
 	@ExceptionHandler(PetStoreRulesException.class)
 	public ResponseEntity<RESTResponse> psRulesException(PetStoreRulesException e, HttpServletResponse response) throws IOException {
 		logger.error("---------------PetStoreRulesException --------"+e.getMessage());
 		
-		e.getViewModel().set_status(RESTResponse.STATUS_ERROR);
+		e.getRESTResponse().set_status(RESTResponse.STATUS_ERROR);
 		
 		HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 		
-		if(e.getViewModel().getHttpStatus() != null) {
-			httpStatus = e.getViewModel().getHttpStatus();
+		if(e.getRESTResponse().getHttpStatus() != null) {
+			httpStatus = e.getRESTResponse().getHttpStatus();
 		}
 		
-		return new ResponseEntity<RESTResponse>(e.getViewModel(), httpStatus);
+		return new ResponseEntity<RESTResponse>(e.getRESTResponse(), httpStatus);
 	}
 }
