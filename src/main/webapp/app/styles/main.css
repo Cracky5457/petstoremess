@@ -58,11 +58,26 @@
     }
 }
 
+.cursor-default {
+    cursor: default;
+}
+
 #table-pets td {
     vertical-align: middle;
 }
 
 #avatar-pet {
-    max-height: 80px;
-    max-width: 150px;
+    max-height: 50px;
+    max-width: 50px;
+}
+
+input:focus:invalid:focus, textarea:focus:invalid:focus, select:focus:invalid:focus {
+    border-color: #e9322d;
+    -webkit-box-shadow: 0 0 6px #f8b9b7;
+    -moz-box-shadow: 0 0 6px #f8b9b7;
+    box-shadow: 0 0 6px #f8b9b7;
+}
+
+.text-error {
+    color : #a94442;
 }

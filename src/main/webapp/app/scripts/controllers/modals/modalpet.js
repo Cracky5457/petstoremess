@@ -8,7 +8,7 @@
  * Controller of the poFront
  */
  angular.module('petstoreFrontApp')
- .controller('ModalPetCtrl', function ($uibModalInstance,CONSTANTS,PetsApiFactory, items) {
+ .controller('ModalPetCtrl', function ($scope, $uibModalInstance,CONSTANTS,PetsApiFactory, items) {
 
  	  var me = this;
 
@@ -72,7 +72,16 @@
      }
 
 	  this.ok = function () {
-	    $uibModalInstance.close(this.petModel);
+
+			this.formPet.submitted = true;
+
+			if(this.formPet.$valid) {
+				$uibModalInstance.close(this.petModel);
+			} else {
+				console.log('Errors in form data');
+				console.log(this.formPet.submitted);
+				console.log(this.formPet.name.$invalid);
+			}
 	  };
 
 	  this.cancel = function () {

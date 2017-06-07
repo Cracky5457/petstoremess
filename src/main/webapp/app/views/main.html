@@ -40,11 +40,11 @@
           </tr>
           <tr ng-repeat="pet in main.displayListPets">
             <td>
-              <!--
+
               <span ng-if="pet.photoUrls != null && pet.photoUrls.length > 0">
-                <img id="avatar-pet" ng-src="{{pet.photoUrls[0]}}">
+                <img id="avatar-pet" ng-src="{{pet.photoUrls[0]}}" class="img-circle"> 
               </span>
-              -->
+
               {{pet.name}}
             </td>
             <td valign="middle">{{pet.status}}</td>

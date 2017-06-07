@@ -4,26 +4,30 @@
     <i class="clickable fa fa-times fa-2x pull-right color-primary" aria-hidden="true" ng-click="pet.cancel()"></i>
   </div>
   <div class="modal-body">
-      <form>
+      <ng-form name="pet.formPet" >
         <fieldset ng-disabled="pet.isViewMode()">
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" placeholder="Name" ng-model="pet.petModel.name">
+          <div class="form-group" ng-class="(pet.formPet.submitted && pet.formPet.name.$invalid) ? 'has-error' : ''">
+            <label class="control-label" for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Name" data-ng-model="pet.petModel.name" pattern=".{1,50}" required>
+            <span class="text-error" data-ng-show="pet.formPet.submitted && pet.formPet.name.$invalid">Name is required ( max 50 characters )</span>
           </div>
-          <div class="form-group">
-            <label for="status">Status</label>
-            <select class="form-control" ng-options="status for status in pet.status" ng-model="pet.petModel.status"></select>
+          <div class="form-group" ng-class="(pet.formPet.submitted && pet.formPet.status.$invalid) ? 'has-error' : ''">
+            <label class="control-label" for="status">Status</label>
+            <select class="form-control" id="status" name="status" ng-options="status for status in pet.status" data-ng-model="pet.petModel.status" required></select>
+            <span class="text-error" data-ng-show="pet.formPet.submitted && pet.formPet.status.$invalid">Status is required</span>
+                    
           </div>
-          <div class="form-group">
-            <label for="category">Category</label>
-            <input type="text" class="form-control" id="category" placeholder="category" ng-model="pet.petModel.category.name">
+          <div class="form-group" ng-class="(pet.formPet.submitted && pet.formPet.category.$invalid) ? 'has-error' : ''">
+            <label class="control-label" for="category">Category</label>
+            <input type="text" class="form-control" id="category" name="category" placeholder="category" data-ng-model="pet.petModel.category.name" required>
+            <span class="text-error" data-ng-show="pet.formPet.submitted && pet.formPet.category.$invalid">Category is required ( max 50 characters )</span>
           </div>
           <div class="form-group" ng-show="!pet.isViewMode()">
-            <label for="tags">Tags</label>
-            <tags-input ng-model="pet.petModel.tags" display-property="name"></tags-input>
+            <label class="control-label" for="tags">Tags</label>
+            <tags-input data-ng-model="pet.petModel.tags" display-property="name"></tags-input>
           </div>
           <div class="form-group" ng-show="pet.isViewMode()">
-            <label for="tags">Tags</label>
+            <label class="control-label" for="tags">Tags</label>
             <input type="text" class="form-control" id="tags" ng-value="pet.displayTags(pet.petModel.tags)"></input>
           </div>
           <div class="row" ng-show="pet.petModel.photoUrls != null && pet.petModel.photoUrls.length > 0">
@@ -34,7 +38,7 @@
               </div>
           </div>
         </fieldset>
-    </form>
+    </ng-form>
 
   </div>
   <div class="modal-footer">

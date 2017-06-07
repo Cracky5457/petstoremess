@@ -8,8 +8,12 @@
  * Controller of the petstoreFrontApp
  */
 angular.module('petstoreFrontApp')
-  .controller('MenuCtrl', function ($location) {
+  .controller('MenuCtrl', function ($location, userApiFactory) {
 
+	var me = this;
+	
+	this.user = userApiFactory.getUser();
+	
     this.menus = {
         "home":"",
         "about":"",
@@ -22,6 +26,7 @@ angular.module('petstoreFrontApp')
 	    	"home":"",
 	    	"about":"",
 	    	"login":"",
+			"logout":""
 	    }
 
 	    this.menus[name] = 'active';
@@ -38,4 +43,14 @@ angular.module('petstoreFrontApp')
 			this.menus.login = 'active';
 		}
     }
+
+	this.logout= function() {
+
+		userApiFactory.logout().then(function() {
+			// we redirect to login
+			me.clickMenu('login');
+			$location.path('/login');
+		})
+	}
+
   });

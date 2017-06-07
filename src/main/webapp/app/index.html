@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Petstore</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -46,7 +46,9 @@
               <li ng-class="menu.menus.about"><a ng-click="menu.clickMenu('about')" ng-href="#/about">About</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li ng-class="menu.menus.login"><a ng-click="menu.clickMenu('login')" ng-href="#/login">Login</a></li>
+                <li ng-show="menu.user.username !== null"><a class="cursor-default" ><i class="glyphicon glyphicon-user"></i>&nbsp{{menu.user.username}}</a></li>
+                <li ng-if="menu.user.username === null" ng-class="menu.menus.login"><a ng-click="menu.clickMenu('login')" ng-href="#/login">Login</a></li>
+                <li ng-if="menu.user.username !== null"ng-class="menu.menus.logout"><a class="clickable" ng-click="menu.logout()">Logout</a></li>
             </ul>
           </div>
         </div>

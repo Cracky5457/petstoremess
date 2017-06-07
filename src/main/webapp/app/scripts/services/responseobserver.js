@@ -20,9 +20,6 @@ angular.module('petstoreFrontApp')
   .factory('responseObserver', function responseObserver($q, $location, $injector, $window, toastr) {
     return {
       responseError: function (errorResponse) {
-              console.log("observer");
-        
-    
         switch (errorResponse.status) {
           case 401:
             $location.path('login');

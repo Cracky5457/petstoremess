@@ -57,4 +57,18 @@ angular
       .otherwise({
         redirectTo: '/'
       });
+  })
+  .run(function ($rootScope, $location, CONSTANTS, userApiFactory) {
+    $rootScope.$on( "$routeChangeStart", function(event, next, current) {
+         if(next.$$route.originalPath !== "/login") {
+           userApiFactory.user().then(function (user) {
+             // do nothing, we let the route change
+           },function(error) {
+             // we stop the event routeChangeStart
+             event.preventDefault();
+             // then redirect to login
+             $location.path('/login');
+           });
+         }
+      });
   });

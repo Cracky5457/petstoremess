@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -22,6 +23,7 @@ public class PetDTO extends RESTResponse{
 	private String name;
 	
 	@NotBlank
+	@Pattern(message="Invalid status" , regexp="(Sold|Available|Pending)")
 	private String status;
 	
 	@Valid

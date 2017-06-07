@@ -13,6 +13,8 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.petstore.PetStoreWebSecurityConfiguration;
 import com.petstore.dto.UserDTO;
 import com.petstore.dto.base.RESTResponse;
+import com.petstore.exception.PetStoreException;
 
 @Controller
 @RequestMapping(value = "/user")
@@ -131,7 +134,13 @@ public class UserController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
-	public UserDTO getUser(HttpServletRequest request) throws Exception {
+	public UserDTO getUser(HttpServletRequest request) throws AccessDeniedException {
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth == null || auth instanceof AnonymousAuthenticationToken) {
+			throw new AccessDeniedException("Not connected");
+		}
+		
 		return (UserDTO) request.getSession().getAttribute("logged_user");
 	}
 	

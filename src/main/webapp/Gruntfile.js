@@ -22,6 +22,7 @@ module.exports = function (grunt) {
     cdnify: 'grunt-google-cdn'
   });
   grunt.loadNpmTasks('grunt-connect-proxy');
+  grunt.loadNpmTasks('grunt-karma');
 
   // Configurable paths for the application
   var appConfig = {
