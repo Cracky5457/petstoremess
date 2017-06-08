@@ -79,8 +79,6 @@
 				$uibModalInstance.close(this.petModel);
 			} else {
 				console.log('Errors in form data');
-				console.log(this.formPet.submitted);
-				console.log(this.formPet.name.$invalid);
 			}
 	  };
 
