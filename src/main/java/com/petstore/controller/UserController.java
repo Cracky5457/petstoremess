@@ -100,27 +100,7 @@ public class UserController {
 			new SecurityContextLogoutHandler().logout(request, response, auth);
 		}
 
-		HttpSession session = request.getSession(false);
-
-		if (session != null)
-			session.invalidate();
-
-		/* Clear cookies */
-		if (request.getCookies() != null) {
-			for (Cookie cookie : request.getCookies()) {
-				if (cookie.getName().equals("SMSESSION"))
-					continue;
-
-				if (cookie.getName().equals("cnUser"))
-					continue;
-
-				cookie.setValue("");
-				cookie.setMaxAge(-1);
-				cookie.setPath(getContextPath(request));
-
-				response.addCookie(cookie);
-			}
-		}
+		SecurityContextHolder.getContext().setAuthentication(null);
 
 		response.sendRedirect(getLoginUrl(request));
 	}
@@ -135,11 +115,6 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public UserDTO getUser(HttpServletRequest request) throws AccessDeniedException {
-		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth == null || auth instanceof AnonymousAuthenticationToken) {
-			throw new AccessDeniedException("Not connected");
-		}
 		
 		return (UserDTO) request.getSession().getAttribute("logged_user");
 	}
