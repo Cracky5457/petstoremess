@@ -81,3 +81,13 @@ input:focus:invalid:focus, textarea:focus:invalid:focus, select:focus:invalid:fo
 .text-error {
     color : #a94442;
 }
+
+.content-center {
+    text-align: center;
+}
+
+/** mobile **/
+
+.lib-cat-xsm {
+    font-weight: bold;
+}

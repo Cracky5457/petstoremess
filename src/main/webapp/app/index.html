@@ -42,13 +42,13 @@
           <div class="collapse navbar-collapse" id="js-navbar-collapse">
 
             <ul class="nav navbar-nav">
-              <li ng-class="menu.menus.home"><a ng-click="menu.clickMenu('home')" href="#/">Home</a></li>
-              <li ng-class="menu.menus.about"><a ng-click="menu.clickMenu('about')" ng-href="#/about">About</a></li>
+              <li ng-class="menu.menus.home"><a ng-click="menu.clickMenu('home')" href="#/" data-toggle="collapse" data-target=".navbar-collapse.in" >Home</a></li>
+              <li ng-class="menu.menus.about"><a ng-click="menu.clickMenu('about')" ng-href="#/about" data-toggle="collapse" data-target=".navbar-collapse.in">About</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li ng-show="menu.user.username !== null"><a class="cursor-default" ><i class="glyphicon glyphicon-user"></i>&nbsp{{menu.user.username}}</a></li>
-                <li ng-if="menu.user.username === null" ng-class="menu.menus.login"><a ng-click="menu.clickMenu('login')" ng-href="#/login">Login</a></li>
-                <li ng-if="menu.user.username !== null"ng-class="menu.menus.logout"><a class="clickable" ng-click="menu.logout()">Logout</a></li>
+                <li ng-if="menu.user.username === null" ng-class="menu.menus.login"><a ng-click="menu.clickMenu('login')" ng-href="#/login" data-toggle="collapse" data-target=".navbar-collapse.in">Login</a></li>
+                <li ng-if="menu.user.username !== null"ng-class="menu.menus.logout"><a class="clickable" ng-click="menu.logout()" data-toggle="collapse" data-target=".navbar-collapse.in">Logout</a></li>
             </ul>
           </div>
         </div>
