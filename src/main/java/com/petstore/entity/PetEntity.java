@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -26,10 +27,16 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Table(name = "T_PET")
 public class PetEntity extends AbstractEntity {
 
+	
+	
 	@Id
 	@Column(name = "IDT_PET")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id; 
+	
+    @Version
+    @NotNull
+    private Long version;
 	
     @NotBlank
     @Size(max = 50)
@@ -57,6 +64,14 @@ public class PetEntity extends AbstractEntity {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 
 	public String getName() {

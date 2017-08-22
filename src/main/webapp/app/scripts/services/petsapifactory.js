@@ -25,6 +25,21 @@ angular.module('petstoreFrontApp')
               return response;
             });
       },
+      edit: function (pet) {
+
+
+        return $http.put(CONSTANTS.USERS_DOMAIN + "/pet" + CONSTANTS.SUFFIXE_DOMAIN, pet, {
+              headers: {'If-Match': pet.version}
+            })
+          .then(
+            function (response) {
+              return response.data;
+            },
+            function (response) {
+              console.log(response);
+              return response;
+            });
+      },      
       delete: function (petId) {
         return $http.delete(CONSTANTS.USERS_DOMAIN + "/pet/" + petId + CONSTANTS.SUFFIXE_DOMAIN)
           .then(

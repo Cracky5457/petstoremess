@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.petstore.dto.base.RESTResponse;
 import com.petstore.entity.PetEntity;
 import com.petstore.entity.PetImageEntity;
@@ -17,6 +18,9 @@ import com.petstore.entity.PetTagEntity;
 public class PetDTO extends RESTResponse{
 
 	private Long id; 
+	
+	// @JsonIgnore
+	private Long version;
 
 	@NotBlank
     @Size(max = 50)
@@ -40,6 +44,7 @@ public class PetDTO extends RESTResponse{
 
 	public PetDTO(PetEntity entity) {
 		this.id = entity.getId();
+		this.version = entity.getVersion();
 		this.name = entity.getName();
 		this.status = entity.getStatus();
 		
@@ -78,6 +83,15 @@ public class PetDTO extends RESTResponse{
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 
 	public String getName() {

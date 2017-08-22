@@ -34,7 +34,7 @@ import com.petstore.exception.PetStoreRulesException;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureTestEntityManager
-public class PetstoreDaoPetTests {
+public class PetstoreDaoPetIntegrationTests {
 
     private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(),

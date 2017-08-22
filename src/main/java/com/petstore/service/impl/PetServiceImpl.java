@@ -85,11 +85,11 @@ public class PetServiceImpl implements PetService {
 	@Override
 	@Secured("ROLE_ADD_PET")
 	@Transactional(rollbackOn = Exception.class)
-	public PetDTO savePet(PetDTO dto) throws PetStoreRulesException {
-		return saveOrUpdatePet(dto);
+	public PetDTO savePet(PetDTO dto,String ifMatchValue) throws PetStoreRulesException {
+		return saveOrUpdatePet(dto, ifMatchValue);
 	}
 	
-	private PetDTO saveOrUpdatePet(PetDTO dto) throws PetStoreRulesException {
+	private PetDTO saveOrUpdatePet(PetDTO dto, String ifMatchValue) throws PetStoreRulesException {
 		
 		PetEntity petEntity = new PetEntity();
 		
@@ -108,6 +108,12 @@ public class PetServiceImpl implements PetService {
 			if(petEntity == null) {
 				dto.addErrorMessage("Pet not found");
 				dto.setHttpStatus(HttpStatus.NOT_FOUND);
+				dto.validate();
+			}
+			
+			if(!ifMatchValue.equals(petEntity.getVersion().toString())) {
+				dto.addErrorMessage("Concurrency error");
+				dto.setHttpStatus(HttpStatus.PRECONDITION_FAILED);
 				dto.validate();
 			}
 		}
@@ -157,6 +163,7 @@ public class PetServiceImpl implements PetService {
 		petDao.saveOrUpdate(petEntity);
 		
 		dto.setId(petEntity.getId());
+		dto.setVersion(petEntity.getVersion());
 		
 		return dto;
 	}

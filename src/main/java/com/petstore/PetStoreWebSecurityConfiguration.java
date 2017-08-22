@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -51,5 +52,10 @@ public class PetStoreWebSecurityConfiguration extends WebSecurityConfigurerAdapt
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return authenticationManager();
 	}
+	
+    @Bean
+    public ShallowEtagHeaderFilter shallowEtagHeaderFilter() {
+        return new ShallowEtagHeaderFilter();
+    }
 
 }

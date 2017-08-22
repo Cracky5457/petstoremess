@@ -101,6 +101,35 @@ angular.module('petstoreFrontApp')
           });
     }
 
+    this.editPet = function(petSelected) {
+
+       var modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'views/modals/pet.html',
+            controller: 'ModalPetCtrl',
+            controllerAs: 'pet',
+            size: 'lg',
+            resolve: {
+                items: function () {
+                  return {
+                    state:CONSTANTS.STATE_EDIT,
+                    pet: petSelected
+                  };
+                }
+              }
+          });
+
+          modalInstance.result.then(function (pet) {
+            PetsApiFactory.edit(pet)
+              .then(function(response){
+                me.loadPets();
+              },function(error) {
+
+              });
+          });
+    }
+
+
     this.addImage = function(petSelected) {
 
        var modalInstance = $uibModal.open({

@@ -49,7 +49,7 @@ import com.petstore.service.PetService;
 @SpringBootTest
 @AutoConfigureTestEntityManager
 @Transactional
-public class PetstoreApiPetTests {
+public class PetstoreApiPetIntegrationTests {
 
     private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(),
@@ -129,7 +129,7 @@ public class PetstoreApiPetTests {
 		
 		pet.setTags(tagsDTO);
 		
-		return petService.savePet(pet);
+		return petService.savePet(pet,null);
     }
     
     /**

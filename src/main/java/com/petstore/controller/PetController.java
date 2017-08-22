@@ -44,7 +44,22 @@ public class PetController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
 	public PetDTO savePet(@Valid @RequestBody PetDTO dto) throws PetStoreRulesException {
-		return petService.savePet(dto);
+		return petService.savePet(dto,null);
+	}
+	
+	@RequestMapping(method = RequestMethod.PUT)
+	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseBody
+	public PetDTO editPet(@Valid @RequestBody PetDTO dto, HttpServletRequest request) throws PetStoreRulesException {
+		
+		String ifMatchValue = request.getHeader("If-Match");
+		if(ifMatchValue.isEmpty()) {
+			dto.addErrorMessage("Bad request");
+			dto.setHttpStatus(HttpStatus.BAD_REQUEST);
+			dto.validate();
+		}
+		
+		return petService.savePet(dto,ifMatchValue);
 	}
 	
 	@RequestMapping(value = "/{petId}", method = RequestMethod.DELETE)
@@ -73,8 +88,12 @@ public class PetController {
 	
 	@RequestMapping(value = "/{petId}", method = RequestMethod.GET)
 	@ResponseBody
-	public PetDTO findPetById(@PathVariable Long petId) {
-		return petService.findPetById(petId);
+	public PetDTO findPetById(@PathVariable Long petId, HttpServletResponse response) {
+		PetDTO pet = petService.findPetById(petId);
+		
+		response.setHeader("ETag", pet.getVersion().toString());
+		
+		return pet;
 	}
 	
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
