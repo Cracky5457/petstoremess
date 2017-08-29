@@ -1,4 +1,4 @@
-package com.petstore;
+package com.petstore.integration;
 
 
 

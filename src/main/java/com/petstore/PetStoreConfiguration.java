@@ -29,55 +29,7 @@ public class PetStoreConfiguration extends WebMvcConfigurerAdapter {
 				ObjectMapper objectMapper = c.getObjectMapper();
 				// objectMapper.setSerializationInclusion(Include.NON_NULL);
 
-				PropertyFilter theFilter = new SimpleBeanPropertyFilter() {
-					@Override
-					public void serializeAsField
-
-					(Object pojo, JsonGenerator jgen, SerializerProvider provider, PropertyWriter writer)
-							throws Exception {
-						if (include(writer)) {
-							if (pojo instanceof RESTResponse) {
-								RESTResponse resp = ((RESTResponse) pojo);
-								if (!resp.isIncludeMetaAttributes()) {
-									if (writer.getName().equals("_errorFields")
-											|| writer.getName().equals("_errorMessage")
-											|| writer.getName().equals("_warningMessage")
-											|| writer.getName().equals("_status")
-											|| writer.getName().equals("_successMessage")) {
-										// Do not serialize
-
-									} else {
-										writer.serializeAsField(pojo, jgen, provider);
-									}
-								} else {
-									writer.serializeAsField(pojo, jgen, provider);
-								}
-								/*
-								 * if (!writer.getName().equals("intValue")) {
-								 * writer.serializeAsField(pojo, jgen,
-								 * provider); return; } int intValue = 3; if
-								 * (intValue >= 0) {
-								 * writer.serializeAsField(pojo, jgen,
-								 * provider); }
-								 */
-							} else {
-								writer.serializeAsField(pojo, jgen, provider);
-							}
-						} else if (!jgen.canOmitFields()) { // since 2.3
-							writer.serializeAsOmittedField(pojo, jgen, provider);
-						}
-					}
-
-					@Override
-					protected boolean include(BeanPropertyWriter writer) {
-						return true;
-					}
-
-					@Override
-					protected boolean include(PropertyWriter writer) {
-						return true;
-					}
-				};
+				PropertyFilter theFilter = getPsFilter();
 				FilterProvider filters = new SimpleFilterProvider().addFilter("psFilter", theFilter);
 
 				objectMapper.setFilterProvider(filters);
@@ -85,6 +37,60 @@ public class PetStoreConfiguration extends WebMvcConfigurerAdapter {
 		}
 
 		super.extendMessageConverters(converters);
+	}
+	
+	public static PropertyFilter getPsFilter() {
+		PropertyFilter theFilter = new SimpleBeanPropertyFilter() {
+			@Override
+			public void serializeAsField
+
+			(Object pojo, JsonGenerator jgen, SerializerProvider provider, PropertyWriter writer)
+					throws Exception {
+				if (include(writer)) {
+					if (pojo instanceof RESTResponse) {
+						RESTResponse resp = ((RESTResponse) pojo);
+						if (!resp.isIncludeMetaAttributes()) {
+							if (writer.getName().equals("_errorFields")
+									|| writer.getName().equals("_errorMessage")
+									|| writer.getName().equals("_warningMessage")
+									|| writer.getName().equals("_status")
+									|| writer.getName().equals("_successMessage")) {
+								// Do not serialize
+
+							} else {
+								writer.serializeAsField(pojo, jgen, provider);
+							}
+						} else {
+							writer.serializeAsField(pojo, jgen, provider);
+						}
+						/*
+						 * if (!writer.getName().equals("intValue")) {
+						 * writer.serializeAsField(pojo, jgen,
+						 * provider); return; } int intValue = 3; if
+						 * (intValue >= 0) {
+						 * writer.serializeAsField(pojo, jgen,
+						 * provider); }
+						 */
+					} else {
+						writer.serializeAsField(pojo, jgen, provider);
+					}
+				} else if (!jgen.canOmitFields()) { // since 2.3
+					writer.serializeAsOmittedField(pojo, jgen, provider);
+				}
+			}
+
+			@Override
+			protected boolean include(BeanPropertyWriter writer) {
+				return true;
+			}
+
+			@Override
+			protected boolean include(PropertyWriter writer) {
+				return true;
+			}
+		};
+		
+		return theFilter;
 	}
 }
 

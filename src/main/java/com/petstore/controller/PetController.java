@@ -54,7 +54,7 @@ public class PetController {
 		
 		String ifMatchValue = request.getHeader("If-Match");
 		if(ifMatchValue.isEmpty()) {
-			dto.addErrorMessage("Bad request");
+			dto.addErrorMessage("Bad request, if-match should be provided for an update");
 			dto.setHttpStatus(HttpStatus.BAD_REQUEST);
 			dto.validate();
 		}

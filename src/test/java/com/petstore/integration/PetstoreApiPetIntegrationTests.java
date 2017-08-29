@@ -1,4 +1,4 @@
-package com.petstore;
+package com.petstore.integration;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
